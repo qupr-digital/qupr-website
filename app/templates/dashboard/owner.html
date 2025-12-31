@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Qupr Digital{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-10">
+    <div>
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">Dashboard</h1>
+        <p class="text-zinc-500 mt-1">Welcome back, {{ current_user.name }}</p>
+    </div>
+    <div class="flex flex-wrap gap-3">
+        <a href="{{ url_for('invoices.create_invoice') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-medium shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            New Invoice
+        </a>
+        <a href="{{ url_for('clients.create_client') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-zinc-300 rounded-xl font-medium transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            Add Client
+        </a>
+        <a href="{{ url_for('products.create_product') }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-zinc-300 rounded-xl font-medium transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            Add Product
+        </a>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-primary-500/30 rounded-2xl p-5 transition-all cursor-default">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Clients</span>
+                <div class="w-8 h-8 rounded-lg bg-primary-500/10 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+            </div>
+            <p class="text-3xl font-bold text-white">{{ total_clients }}</p>
+        </div>
+    </div>
+
+    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-blue-500/30 rounded-2xl p-5 transition-all cursor-default">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Products</span>
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                </div>
+            </div>
+            <p class="text-3xl font-bold text-white">{{ total_products }}</p>
+        </div>
+    </div>
+
+    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-amber-500/30 rounded-2xl p-5 transition-all cursor-default">
+        <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Invoices</span>
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+            </div>
+            <p class="text-3xl font-bold text-white">{{ total_invoices }}</p>
+        </div>
+    </div>
+
+    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-emerald-500/30 rounded-2xl p-5 transition-all cursor-default">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Revenue</span>
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+            </div>
+            <p class="text-2xl font-bold text-white">₹{{ "%.0f"|format(total_revenue) }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Invoice Status -->
+<div class="grid grid-cols-3 gap-4 mb-8">
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-2 h-2 rounded-full bg-zinc-500"></div>
+            <span class="text-sm text-zinc-400">Draft</span>
+        </div>
+        <p class="text-2xl font-bold text-zinc-400">{{ draft_invoices }}</p>
+    </div>
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+            <span class="text-sm text-zinc-400">Issued</span>
+        </div>
+        <p class="text-2xl font-bold text-amber-400">{{ issued_invoices }}</p>
+    </div>
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <span class="text-sm text-zinc-400">Paid</span>
+        </div>
+        <p class="text-2xl font-bold text-emerald-400">{{ paid_invoices }}</p>
+    </div>
+</div>
+
+<!-- Recent Invoices -->
+<div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-white/[0.06]">
+        <h2 class="text-lg font-semibold">Recent Invoices</h2>
+        <a href="{{ url_for('invoices.list_invoices') }}" class="text-sm text-primary-400 hover:text-primary-300 transition-colors">View all →</a>
+    </div>
+    {% if recent_invoices %}
+    <div class="divide-y divide-white/[0.04]">
+        {% for invoice in recent_invoices %}
+        <a href="{{ url_for('invoices.view_invoice', invoice_id=invoice._id) }}" class="flex items-center justify-between px-6 py-4 hover:bg-white/[0.02] transition-colors group">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div>
+                    <p class="font-mono text-sm font-medium text-white group-hover:text-primary-400 transition-colors">{{ invoice.invoice_no }}</p>
+                    <p class="text-xs text-zinc-500">{{ invoice.client_snapshot.name if invoice.client_snapshot else 'Unknown' }}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="text-right">
+                    <p class="font-semibold text-white">₹{{ "%.2f"|format(invoice.total) }}</p>
+                    <p class="text-xs text-zinc-500">{{ invoice.created_at.strftime('%d %b %Y') }}</p>
+                </div>
+                {% if invoice.status == 'paid' %}
+                <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg text-xs font-medium">Paid</span>
+                {% elif invoice.status == 'issued' %}
+                <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 rounded-lg text-xs font-medium">Issued</span>
+                {% else %}
+                <span class="px-2.5 py-1 bg-white/[0.06] text-zinc-400 rounded-lg text-xs font-medium">Draft</span>
+                {% endif %}
+                <svg class="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="px-6 py-16 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/[0.04] flex items-center justify-center">
+            <svg class="w-8 h-8 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <p class="text-zinc-500 mb-4">No invoices yet</p>
+        <a href="{{ url_for('invoices.create_invoice') }}" class="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Create your first invoice
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

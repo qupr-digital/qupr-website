@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance for Qupr Digital
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/path/to/QuprDigital
+Environment="PATH=/path/to/QuprDigital/venv/bin"
+ExecStart=/path/to/QuprDigital/venv/bin/gunicorn -c gunicorn_config.py wsgi:application
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product - Qupr Digital{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="mb-8">
+    <a href="{{ url_for('products.list_products') }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Back to Products
+    </a>
+    <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">Add Product</h1>
+</div>
+
+<!-- Form -->
+<div class="max-w-xl">
+    <form method="POST" class="space-y-6">
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-6">
+            <div>
+                <label for="name" class="block text-sm font-medium text-zinc-400 mb-2">Product Name <span class="text-red-400">*</span></label>
+                <input type="text" id="name" name="name" required placeholder="e.g., Software License, Consulting Hours"
+                       class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-all">
+            </div>
+
+            <div>
+                <label for="description" class="block text-sm font-medium text-zinc-400 mb-2">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Brief description of the product..."
+                          class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all resize-none"></textarea>
+            </div>
+
+            <div>
+                <label for="hsn" class="block text-sm font-medium text-zinc-400 mb-2">HSN Code</label>
+                <input type="text" id="hsn" name="hsn" placeholder="e.g., 998361"
+                       class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all font-mono">
+            </div>
+        </div>
+
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-6">
+            <h3 class="text-sm font-medium text-zinc-300">Pricing</h3>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="rate" class="block text-sm font-medium text-zinc-400 mb-2">Unit Rate (₹) <span class="text-red-400">*</span></label>
+                    <input type="number" id="rate" name="rate" step="0.01" min="0" required placeholder="0.00"
+                           class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all">
+                </div>
+
+                <div>
+                    <label for="tax_rate" class="block text-sm font-medium text-zinc-400 mb-2">Tax Rate (%) <span class="text-red-400">*</span></label>
+                    <input type="number" id="tax_rate" name="tax_rate" step="0.01" min="0" max="100" required placeholder="18"
+                           class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex gap-4">
+            <button type="submit" class="flex-1 py-3.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-0.5">
+                Create Product
+            </button>
+            <a href="{{ url_for('products.list_products') }}" class="px-8 py-3.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 rounded-xl font-medium transition-all">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

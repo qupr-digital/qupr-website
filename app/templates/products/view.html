@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Qupr Digital{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+    <div>
+        <a href="{{ url_for('products.list_products') }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-4">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Back to Products
+        </a>
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 flex items-center justify-center">
+                <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">{{ product.name }}</h1>
+                {% if product.hsn %}
+                <code class="text-xs text-zinc-400 font-mono">HSN: {{ product.hsn }}</code>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-wrap gap-3">
+        <a href="{{ url_for('products.edit_product', product_id=product._id) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 rounded-xl font-medium transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Edit
+        </a>
+        <form method="POST" action="{{ url_for('products.deactivate_product', product_id=product._id) }}" class="inline" onsubmit="return confirm('Are you sure you want to deactivate this product?');">
+            <button type="submit" class="inline-flex items-center gap-2 px-4 py-2.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 rounded-xl font-medium transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                Deactivate
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Product Details -->
+<div class="grid md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
+        <h3 class="text-sm font-medium text-zinc-500 uppercase tracking-wider mb-4">Product Details</h3>
+        <div class="space-y-4">
+            <div>
+                <span class="text-xs text-zinc-500">Name</span>
+                <p class="font-medium">{{ product.name }}</p>
+            </div>
+            <div>
+                <span class="text-xs text-zinc-500">Description</span>
+                <p class="text-zinc-300">{{ product.description or '-' }}</p>
+            </div>
+            <div>
+                <span class="text-xs text-zinc-500">HSN Code</span>
+                <p class="font-mono text-sm">{{ product.hsn or '-' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
+        <h3 class="text-sm font-medium text-zinc-500 uppercase tracking-wider mb-4">Pricing</h3>
+        <div class="space-y-4">
+            <div>
+                <span class="text-xs text-zinc-500">Rate</span>
+                <p class="text-2xl font-bold text-emerald-400">₹{{ "%.2f"|format(product.rate) }}</p>
+            </div>
+            <div>
+                <span class="text-xs text-zinc-500">Tax Rate</span>
+                <p class="font-medium">{{ product.tax_rate }}% GST</p>
+            </div>
+            <div>
+                <span class="text-xs text-zinc-500">Rate Including Tax</span>
+                <p class="font-medium text-zinc-300">₹{{ "%.2f"|format(product.rate * (1 + product.tax_rate / 100)) }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Metadata -->
+<div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
+    <h3 class="text-sm font-medium text-zinc-500 uppercase tracking-wider mb-4">Information</h3>
+    <div class="flex items-center gap-8">
+        <div>
+            <span class="text-xs text-zinc-500">Created</span>
+            <p class="text-sm text-zinc-400">{{ product.created_at.strftime('%d %b %Y at %H:%M') }}</p>
+        </div>
+        <div>
+            <span class="text-xs text-zinc-500">Status</span>
+            {% if product.is_active %}
+            <span class="inline-flex items-center gap-1.5 text-sm text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                Active
+            </span>
+            {% else %}
+            <span class="inline-flex items-center gap-1.5 text-sm text-red-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                Inactive
+            </span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

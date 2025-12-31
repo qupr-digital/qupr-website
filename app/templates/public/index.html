@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Qupr Digital - Modern Invoice & Business Management{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative py-20 lg:py-32 -mt-8">
+    <div class="absolute inset-0"></div>
+    <div class="relative text-center max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-sm text-zinc-400 mb-8">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Trusted by 50+ businesses
+        </div>
+        <h1 class="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
+            <span class="bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">
+                Digital Infrastructure
+            </span>
+            <br>
+            <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+                Built for Growth
+            </span>
+        </h1>
+        <p class="text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+            From custom web and app development to secure hosting and operations,
+            Qupr Digital helps businesses ship and scale with confidence.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ url_for('auth.login') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold shadow-2xl shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-1">
+                Get Started Free
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </a>
+            <a href="#services" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-zinc-300 rounded-xl font-semibold transition-all">
+                Learn More
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid -->
+<section class="py-20">
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-primary-500/30 rounded-2xl p-8 transition-all">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative">
+                <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Operational Transparency</h3>
+                <p class="text-zinc-400 leading-relaxed">
+                    Clear, well-structured billing with accurate tax breakdowns,
+                    reflecting our commitment to transparent and reliable operations.
+                </p>
+            </div>
+        </div>
+
+        <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-blue-500/30 rounded-2xl p-8 transition-all">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative">
+                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Client Access</h3>
+                <p class="text-zinc-400 leading-relaxed">
+                    Clients receive secure access to their billing and documents,
+                    reinforcing transparency and long-term trust.
+                </p>
+            </div>
+        </div>
+
+        <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-emerald-500/30 rounded-2xl p-8 transition-all">
+            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Scalable Infrastructure</h3>
+                <p class="text-zinc-400 leading-relaxed">
+                    Our systems are designed to scale reliably,
+                    supporting growing applications and long-term business needs.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-20">
+    <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Our Services</h2>
+        <p class="text-zinc-400 text-lg max-w-2xl mx-auto">Beyond invoicing - complete digital solutions for your business</p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-gradient-to-br from-white/[0.04] to-transparent border border-white/[0.06] rounded-2xl p-8 hover:border-white/[0.12] transition-all">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-violet-500/5 flex items-center justify-center mb-6">
+                <svg class="w-7 h-7 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Hosting Services</h3>
+            <p class="text-zinc-400 leading-relaxed">Reliable, scalable cloud hosting infrastructure for your applications and websites with 99.9% uptime.</p>
+        </div>
+
+        <div class="bg-gradient-to-br from-white/[0.04] to-transparent border border-white/[0.06] rounded-2xl p-8 hover:border-white/[0.12] transition-all">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 flex items-center justify-center mb-6">
+                <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">App Development</h3>
+            <p class="text-zinc-400 leading-relaxed">Custom mobile and web applications built with modern technologies. iOS, Android, and cross-platform.</p>
+        </div>
+
+        <div class="bg-gradient-to-br from-white/[0.04] to-transparent border border-white/[0.06] rounded-2xl p-8 hover:border-white/[0.12] transition-all">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500/20 to-rose-500/5 flex items-center justify-center mb-6">
+                <svg class="w-7 h-7 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Web Development</h3>
+            <p class="text-zinc-400 leading-relaxed">Professional websites and web platforms tailored to your needs. SEO-optimized and lightning fast.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-20">
+    <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Trusted by Businesses</h2>
+        <p class="text-zinc-400 text-lg">What our clients say about us</p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
+            <div class="flex gap-1 mb-4">
+                {% for i in range(5) %}
+                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                {% endfor %}
+            </div>
+            <p class="text-zinc-300 mb-6 leading-relaxed">"The hosting and support have been extremely reliable. Our website has had zero downtime since we switched."</p>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold">R</div>
+                <div>
+                    <p class="font-medium text-white">Rohan Verma</p>
+                    <p class="text-sm text-zinc-500">Sigma Communications</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
+            <div class="flex gap-1 mb-4">
+                {% for i in range(5) %}
+                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                {% endfor %}
+            </div>
+            <p class="text-zinc-300 mb-6 leading-relaxed">"They delivered our web platform on time with great attention to detail. Highly recommended for any project."</p>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-semibold">N</div>
+                <div>
+                    <p class="font-medium text-white">Neha Sharma</p>
+                    <p class="text-sm text-zinc-500">Rahul Associates</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
+            <div class="flex gap-1 mb-4">
+                {% for i in range(5) %}
+                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                {% endfor %}
+            </div>
+            <p class="text-zinc-300 mb-6 leading-relaxed">"From app development to hosting, they handled everything seamlessly. A true one-stop solution for startups."</p>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-semibold">A</div>
+                <div>
+                    <p class="font-medium text-white">Arjun Mehta</p>
+                    <p class="text-sm text-zinc-500">Startup Founder</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20">
+    <div class="relative bg-gradient-to-br from-primary-600/20 via-primary-500/10 to-transparent border border-primary-500/20 rounded-3xl p-12 text-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent"></div>
+        <div class="relative">
+            <h2 class="text-3xl lg:text-4xl font-bold mb-4">
+                Ready to build and scale your product?
+            </h2>
+            <p class="text-zinc-400 text-lg mb-8 max-w-2xl mx-auto">
+                Partner with Qupr Digital for reliable web and app development,
+                backed by secure hosting and professional operations.
+            </p>
+            <a href="{{ url_for('auth.login') }}"
+               class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-zinc-900 rounded-xl font-semibold shadow-2xl transition-all hover:shadow-white/20 hover:-translate-y-1">
+                Client Login
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-white/[0.06] py-12 -mx-6 px-6 -mb-8">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center">
+                <img src="{{ url_for('static', filename='img/logo/qupr.png') }}" alt="Qupr Digital" class="w-5 h-5">
+            </div>
+            <span class="font-semibold">Qupr Digital</span>
+        </div>
+        <div class="flex items-center gap-8 text-sm text-zinc-500">
+            <a href="mailto:contact.shashankpandey04@gmail.com" class="hover:text-white transition-colors">contact.shashankpandey04@gmail.com</a>
+            <!-- <span>{{ config.COMPANY_PHONE }}</span> -->
+        </div>
+        <p class="text-sm text-zinc-500">© <span id="year"></span> Qupr Digital. All rights reserved.</p>
+    </div>
+</footer>
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+{% endblock %}

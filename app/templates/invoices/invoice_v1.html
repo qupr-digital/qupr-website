@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice {{ invoice.invoice_no }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; font-size: 12px; line-height: 1.6; padding: 20px; }
+        .invoice-container { max-width: 800px; margin: 0 auto; background: white; }
+        .header { border-bottom: 3px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+        .company-info { float: left; width: 50%; }
+        .invoice-info { float: right; width: 45%; text-align: right; }
+        .company-name { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .invoice-title { font-size: 28px; font-weight: bold; color: #333; }
+        .clearfix::after { content: ""; display: table; clear: both; }
+        .section { margin-bottom: 20px; }
+        .section-title { font-weight: bold; font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .client-box { background: #f9f9f9; padding: 15px; border: 1px solid #ddd; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th { background: #333; color: white; padding: 10px; text-align: left; }
+        td { padding: 10px; border-bottom: 1px solid #ddd; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        .totals { float: right; width: 300px; }
+        .totals-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ddd; }
+        .totals-row.total { font-weight: bold; font-size: 16px; border-top: 2px solid #333; margin-top: 10px; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; text-align: center; color: #666; }
+        @media print {
+            body { padding: 0; }
+            .no-print { display: none; }
+        }
+        .print-btn { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <button onclick="window.print()" class="print-btn no-print">Print Invoice</button>
+        
+        <div class="header clearfix">
+            <div class="company-info">
+                <div class="company-name">{{ company_info.name }}</div>
+                <div>{{ company_info.address }}</div>
+                <div>GSTIN: {{ company_info.gstin }}</div>
+                <div>Email: {{ company_info.email }}</div>
+                <div>Phone: {{ company_info.phone }}</div>
+            </div>
+            <div class="invoice-info">
+                <div class="invoice-title">INVOICE</div>
+                <div style="margin-top: 10px;">
+                    <strong>Invoice No:</strong> {{ invoice.invoice_no }}<br>
+                    {% if invoice.issue_date %}
+                    <strong>Issue Date:</strong> {{ invoice.issue_date.strftime('%d-%m-%Y') }}<br>
+                    <strong>Due Date:</strong> {{ invoice.due_date.strftime('%d-%m-%Y') }}<br>
+                    {% endif %}
+                    <strong>Status:</strong> {{ invoice.status }}
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">BILL TO</div>
+            <div class="client-box">
+                <strong>{{ client.company_name if client.company_name is defined else client['company_name'] }}</strong><br>
+                {{ client.billing_address if client.billing_address is defined else client['billing_address'] }}<br>
+                {% if client.gstin or client.get('gstin') %}
+                GSTIN: {{ client.gstin if client.gstin is defined else client['gstin'] }}<br>
+                {% endif %}
+                {% if client.contact_email or client.get('contact_email') %}
+                Email: {{ client.contact_email if client.contact_email is defined else client['contact_email'] }}<br>
+                {% endif %}
+                {% if client.contact_phone or client.get('contact_phone') %}
+                Phone: {{ client.contact_phone if client.contact_phone is defined else client['contact_phone'] }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="section">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 35%;">Description</th>
+                        <th style="width: 15%;">HSN</th>
+                        <th style="width: 10%;" class="text-right">Rate</th>
+                        <th style="width: 10%;" class="text-right">Qty</th>
+                        <th style="width: 10%;" class="text-right">Tax %</th>
+                        <th style="width: 15%;" class="text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice['items'] %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>
+                            <strong>{{ item.name }}</strong>
+                            {% if item.description %}<br><small>{{ item.description }}</small>{% endif %}
+                        </td>
+                        <td>{{ item.hsn }}</td>
+                        <td class="text-right">₹{{ "%.2f"|format(item.rate) }}</td>
+                        <td class="text-right">{{ item.quantity }}</td>
+                        <td class="text-right">{{ item.tax_rate }}%</td>
+                        <td class="text-right">₹{{ "%.2f"|format(item.rate * item.quantity) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="clearfix">
+            <div class="totals">
+                <div class="totals-row">
+                    <span>Subtotal:</span>
+                    <span>₹{{ "%.2f"|format(invoice.subtotal) }}</span>
+                </div>
+                {% for tax_rate, tax_amount in invoice['tax_breakup'].items() %}
+                <div class="totals-row">
+                    <span>CGST {{ "%.1f"|format(tax_rate / 2) }}%:</span>
+                    <span>₹{{ "%.2f"|format(tax_amount / 2) }}</span>
+                </div>
+                <div class="totals-row">
+                    <span>SGST {{ "%.1f"|format(tax_rate / 2) }}%:</span>
+                    <span>₹{{ "%.2f"|format(tax_amount / 2) }}</span>
+                </div>
+                {% endfor %}
+                <div class="totals-row total">
+                    <span>TOTAL:</span>
+                    <span>₹{{ "%.2f"|format(invoice.total) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your business!</p>
+            <p>This is a computer-generated invoice.</p>
+        </div>
+    </div>
+</body>
+</html>

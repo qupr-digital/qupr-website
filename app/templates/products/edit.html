@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product - Qupr Digital{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="mb-8">
+    <a href="{{ url_for('products.view_product', product_id=product._id) }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Back to Product
+    </a>
+    <h1 class="text-2xl font-bold">Edit Product</h1>
+</div>
+
+<form method="POST" class="max-w-2xl">
+    <!-- Product Details -->
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 mb-6">
+        <h2 class="text-lg font-semibold mb-6">Product Details</h2>
+        
+        <div class="space-y-5">
+            <div>
+                <label for="name" class="block text-sm font-medium text-zinc-400 mb-2">Product Name *</label>
+                <input type="text" id="name" name="name" value="{{ product.name }}" required
+                    class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all">
+            </div>
+
+            <div>
+                <label for="description" class="block text-sm font-medium text-zinc-400 mb-2">Description</label>
+                <textarea id="description" name="description" rows="3"
+                    class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all resize-none">{{ product.description }}</textarea>
+            </div>
+
+            <div>
+                <label for="hsn" class="block text-sm font-medium text-zinc-400 mb-2">HSN Code</label>
+                <input type="text" id="hsn" name="hsn" value="{{ product.hsn }}"
+                    class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all font-mono">
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 mb-8">
+        <h2 class="text-lg font-semibold mb-6">Pricing</h2>
+        
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <label for="rate" class="block text-sm font-medium text-zinc-400 mb-2">Rate (₹) *</label>
+                <input type="number" id="rate" name="rate" value="{{ product.rate }}" step="0.01" min="0" required
+                    class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all">
+            </div>
+            <div>
+                <label for="tax_rate" class="block text-sm font-medium text-zinc-400 mb-2">Tax Rate (%) *</label>
+                <input type="number" id="tax_rate" name="tax_rate" value="{{ product.tax_rate }}" step="0.01" min="0" max="100" required
+                    class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all">
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-4">
+        <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold transition-all">
+            Update Product
+        </button>
+        <a href="{{ url_for('products.view_product', product_id=product._id) }}" class="px-6 py-3 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 rounded-xl font-medium transition-all">
+            Cancel
+        </a>
+    </div>
+</form>
+{% endblock %}

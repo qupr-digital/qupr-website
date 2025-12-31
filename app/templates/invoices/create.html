@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Create Invoice - Qupr Digital{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="mb-8">
+    <a href="{{ url_for('invoices.list_invoices') }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-4">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Back to Invoices
+    </a>
+    <h1 class="text-2xl font-bold">Create Invoice</h1>
+</div>
+
+<form method="POST" id="invoice-form" class="max-w-4xl">
+    <!-- Client Selection -->
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 mb-6">
+        <h2 class="text-lg font-semibold mb-6">Client</h2>
+        
+        <div>
+            <label for="client_id" class="block text-sm font-medium text-zinc-400 mb-2">Select Client *</label>
+            <select name="client_id" id="client_id" required
+                class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all appearance-none cursor-pointer">
+                <option value="">Choose a client...</option>
+                {% for client in clients %}
+                <option value="{{ client._id }}">{{ client.company_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Invoice Items -->
+    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 mb-6">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-semibold">Invoice Items</h2>
+            <button type="button" onclick="addItem()" class="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 rounded-lg text-sm font-medium transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                Add Item
+            </button>
+        </div>
+        
+        <div id="items-container" class="space-y-4">
+            <div class="invoice-item" data-index="0">
+                <div class="grid grid-cols-12 gap-4 items-end">
+                    <div class="col-span-7">
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Product *</label>
+                        <select name="item_0_product_id" required onchange="updateItemDetails(0)"
+                            class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all appearance-none cursor-pointer">
+                            <option value="">Select Product</option>
+                            {% for product in products %}
+                            <option value="{{ product._id }}" 
+                                    data-rate="{{ product.rate }}" 
+                                    data-tax="{{ product.tax_rate }}">
+                                {{ product.name }} - ₹{{ product.rate }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-span-3">
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Quantity *</label>
+                        <input type="number" name="item_0_quantity" step="0.01" min="0.01" required value="1"
+                            class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all">
+                    </div>
+                    <div class="col-span-2">
+                        <button type="button" onclick="removeItem(0)" class="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 rounded-xl font-medium transition-all text-sm">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="item_count" id="item_count" value="1">
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-4">
+        <button type="submit" class="flex-1 py-3.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold transition-all inline-flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            Create Invoice
+        </button>
+        <a href="{{ url_for('invoices.list_invoices') }}" class="px-8 py-3.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 rounded-xl font-medium transition-all">
+            Cancel
+        </a>
+    </div>
+</form>
+
+<script>
+let itemIndex = 1;
+
+function addItem() {
+    const container = document.getElementById('items-container');
+    const itemHtml = `
+        <div class="invoice-item" data-index="${itemIndex}">
+            <div class="grid grid-cols-12 gap-4 items-end">
+                <div class="col-span-7">
+                    <label class="block text-sm font-medium text-zinc-400 mb-2">Product *</label>
+                    <select name="item_${itemIndex}_product_id" required
+                        class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all appearance-none cursor-pointer">
+                        <option value="">Select Product</option>
+                        {% for product in products %}
+                        <option value="{{ product._id }}" 
+                                data-rate="{{ product.rate }}" 
+                                data-tax="{{ product.tax_rate }}">
+                            {{ product.name }} - ₹{{ product.rate }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-span-3">
+                    <label class="block text-sm font-medium text-zinc-400 mb-2">Quantity *</label>
+                    <input type="number" name="item_${itemIndex}_quantity" step="0.01" min="0.01" required value="1"
+                        class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all">
+                </div>
+                <div class="col-span-2">
+                    <button type="button" onclick="removeItem(${itemIndex})" class="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 rounded-xl font-medium transition-all text-sm">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', itemHtml);
+    itemIndex++;
+    document.getElementById('item_count').value = itemIndex;
+}
+
+function removeItem(index) {
+    const item = document.querySelector(`.invoice-item[data-index="${index}"]`);
+    if (item) {
+        item.remove();
+    }
+}
+</script>
+{% endblock %}

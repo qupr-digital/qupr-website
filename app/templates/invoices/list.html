@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices - Qupr Digital{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <div>
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">Invoices</h1>
+        <p class="text-zinc-500 mt-1">Manage your invoices</p>
+    </div>
+    {% if current_user.role == 'OWNER' %}
+    <a href="{{ url_for('invoices.create_invoice') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-medium shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-0.5">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        New Invoice
+    </a>
+    {% endif %}
+</div>
+
+<!-- Filters -->
+<div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-4 mb-6">
+    <form method="GET" class="flex flex-wrap gap-4">
+        <select name="status" onchange="this.form.submit()" class="px-4 py-2.5 bg-white/[0.02] border border-white/[0.08] rounded-xl text-zinc-300 focus:outline-none focus:border-primary-500/50 transition-all min-w-[160px]">
+            <option value="">All Status</option>
+            <option value="DRAFT" {% if current_status == 'DRAFT' %}selected{% endif %}>📝 Draft</option>
+            <option value="ISSUED" {% if current_status == 'ISSUED' %}selected{% endif %}>📤 Issued</option>
+            <option value="PAID" {% if current_status == 'PAID' %}selected{% endif %}>✓ Paid</option>
+        </select>
+        {% if current_user.role == 'OWNER' and clients %}
+        <select name="client_id" onchange="this.form.submit()" class="px-4 py-2.5 bg-white/[0.02] border border-white/[0.08] rounded-xl text-zinc-300 focus:outline-none focus:border-primary-500/50 transition-all min-w-[200px]">
+            <option value="">All Clients</option>
+            {% for client in clients %}
+            <option value="{{ client._id }}" {% if current_client == client._id|string %}selected{% endif %}>
+                {{ client.company_name }}
+            </option>
+            {% endfor %}
+        </select>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Invoices List -->
+{% if invoices %}
+<div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
+    <div class="divide-y divide-white/[0.04]">
+        {% for invoice in invoices %}
+        <a href="{{ url_for('invoices.view_invoice', invoice_id=invoice._id) }}" class="flex items-center justify-between px-6 py-4 hover:bg-white/[0.02] transition-colors group">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div>
+                    <p class="font-mono text-sm font-medium text-white group-hover:text-primary-400 transition-colors">{{ invoice.invoice_no }}</p>
+                    {% if current_user.role == 'OWNER' %}
+                    <p class="text-xs text-zinc-500">{{ invoice.snapshot.client.company_name if invoice.snapshot else 'Unknown' }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="hidden sm:block text-right">
+                    <p class="text-xs text-zinc-500">Issue: {{ invoice.issue_date.strftime('%d %b %Y') if invoice.issue_date else '-' }}</p>
+                    <p class="text-xs text-zinc-500">Due: {{ invoice.due_date.strftime('%d %b %Y') if invoice.due_date else '-' }}</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-semibold text-white">₹{{ "%.2f"|format(invoice.total) }}</p>
+                </div>
+                {% if invoice.status == 'PAID' %}
+                <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg text-xs font-medium">Paid</span>
+                {% elif invoice.status == 'ISSUED' %}
+                <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 rounded-lg text-xs font-medium">Issued</span>
+                {% else %}
+                <span class="px-2.5 py-1 bg-white/[0.06] text-zinc-400 rounded-lg text-xs font-medium">Draft</span>
+                {% endif %}
+                <svg class="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl px-6 py-16 text-center">
+    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/[0.04] flex items-center justify-center">
+        <svg class="w-8 h-8 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    </div>
+    <p class="text-zinc-500 mb-4">No invoices found</p>
+    {% if current_user.role == 'OWNER' %}
+    <a href="{{ url_for('invoices.create_invoice') }}" class="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        Create your first invoice
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

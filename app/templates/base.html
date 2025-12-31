@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <!-- Basic Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary SEO -->
+    <title>Qupr Digital - Web, App & Hosting Infrastructure</title>
+    <meta name="description"
+          content="Qupr Digital builds scalable web and mobile applications with reliable hosting and professional operations. Digital infrastructure built for growth.">
+    <meta name="keywords"
+          content="Qupr Digital, web development, app development, hosting, digital infrastructure, SaaS, India">
+    <meta name="author" content="Qupr Digital">
+
+    <!-- Open Graph (Social Sharing) -->
+    <meta property="og:title" content="Qupr Digital — Digital Infrastructure Built for Growth">
+    <meta property="og:description"
+          content="From custom web and app development to secure hosting and operations, Qupr Digital helps businesses ship and scale with confidence.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:image"
+          content="{{ url_for('static', filename='img/logo/qupr.png', _external=True) }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Qupr Digital — Digital Infrastructure Built for Growth">
+    <meta name="twitter:description"
+          content="Web & app development with reliable hosting and professional operations.">
+    <meta name="twitter:image"
+          content="{{ url_for('static', filename='img/logo/qupr.png', _external=True) }}">
+
+    <!-- Favicon / App Icons -->
+    <link rel="icon"
+          href="{{ url_for('static', filename='img/logo/qupr.png') }}"
+          type="image/png">
+    <link rel="apple-touch-icon"
+          href="{{ url_for('static', filename='img/logo/qupr.png') }}">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'glow': 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.15), transparent)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, #6366f1, #818cf8); transition: width 0.3s ease; }
+        .nav-link:hover::after { width: 100%; }
+        .animate-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-[#09090b] text-zinc-100 min-h-screen antialiased">
+    <div class="fixed inset-0 bg-glow pointer-events-none"></div>
+
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <header class="sticky top-0 z-50 glass border-b border-white/[0.06] bg-[#09090b]/80">
+            <div class="max-w-7xl mx-auto px-1">
+                <div class="flex items-center justify-between h-16">
+                <a href="/" class="flex items-center gap-3 group">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/25 overflow-hidden">
+                        <img
+                            src="{{ url_for('static', filename='img/logo/qupr.png') }}"
+                            alt="Qupr Digital Logo"
+                            class="w-full h-full object-contain"
+                        >
+                    </div>
+                    <span class="text-lg font-semibold text-white group-hover:text-primary-400 transition-colors">
+                        Qupr Digital
+                    </span>
+                </a>
+                    {% if current_user %}
+                    <nav class="hidden md:flex items-center gap-1">
+                        <a href="{{ url_for('dashboard.index') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Dashboard</a>
+                        {% if current_user.role == 'OWNER' %}
+                        <a href="{{ url_for('invoices.list_invoices') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Invoices</a>
+                        <a href="{{ url_for('clients.list_clients') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Clients</a>
+                        <a href="{{ url_for('products.list_products') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Products</a>
+                        {% else %}
+                        <a href="{{ url_for('invoices.list_invoices') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">My Invoices</a>
+                        {% endif %}
+                    </nav>
+
+                    <div class="flex items-center gap-4">
+                        <div class="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.06]">
+                            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                                <span class="text-xs font-medium text-white">{{ current_user.name[0]|upper }}</span>
+                            </div>
+                            <span class="text-sm text-zinc-300">{{ current_user.name }}</span>
+                        </div>
+                        <a href="{{ url_for('auth.logout') }}" class="px-4 py-2 text-sm text-zinc-400 hover:text-white border border-white/[0.08] hover:border-white/[0.15] rounded-lg transition-all hover:bg-white/[0.02]">Logout</a>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center gap-3">
+                        <a href="{{ url_for('auth.login') }}" class="px-5 py-2.5 text-sm font-medium rounded-lg bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-0.5">Sign In</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        {% if flash_messages %}
+        <div class="max-w-7xl mx-auto px-6 pt-6 animate-in">
+            {% for category, messages in flash_messages.items() %}
+                {% for message in messages %}
+                <div class="mb-3 px-4 py-3 rounded-xl border backdrop-blur-sm {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/20 text-emerald-400{% elif category == 'error' %}bg-red-500/10 border-red-500/20 text-red-400{% else %}bg-white/[0.03] border-white/[0.06] text-zinc-300{% endif %}">
+                    <div class="flex items-center gap-3">
+                        {% if category == 'success' %}
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        {% elif category == 'error' %}
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        {% else %}
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        {% endif %}
+                        <span class="text-sm">{{ message }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <main class="flex-1">
+            <div class="max-w-7xl mx-auto py-8 animate-in">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+        {% if current_user %}
+        <footer class="border-t border-white/[0.06] mt-auto">
+            <div class="max-w-7xl mx-auto py-6">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-zinc-500">
+                    <span> 2026 Qupr Digital. All rights reserved.</span>
+                    <div class="flex items-center gap-6">
+                        <a href="#" class="hover:text-zinc-300 transition-colors">Help</a>
+                        <a href="#" class="hover:text-zinc-300 transition-colors">Privacy</a>
+                        <a href="#" class="hover:text-zinc-300 transition-colors">Terms</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% endif %}
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
