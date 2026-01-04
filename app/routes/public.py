@@ -18,6 +18,13 @@ def about():
     return render_template('public/about.html')
 
 
+@public_bp.route('/free-invoice-maker')
+@public_bp.route('/invoice-maker')
+def free_invoice_maker():
+    """Free invoice maker page"""
+    return render_template('public/free_invoice_maker.html')
+
+
 @public_bp.route('/contactus')
 def contact():
     """Contact page"""

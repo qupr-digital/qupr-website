@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}Free Invoice Maker | Qupr Digital{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Print only the invoice preview */
+    @media print {
+        body * { visibility: hidden; }
+        #invoice-preview, #invoice-preview * { visibility: visible; }
+        #invoice-preview { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-10">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <p class="text-sm uppercase tracking-[0.2em] text-primary-300/80">Free Invoice Maker</p>
+            <h1 class="text-4xl font-bold">Generate, customize, and download invoices</h1>
+            <p class="text-zinc-300 mt-2">No signup needed. Fill the details, add your line items, and save as PDF with a Qupr Digital watermark.</p>
+        </div>
+        <div class="hidden md:flex items-center gap-2 text-xs text-zinc-500 bg-white/[0.03] border border-white/[0.06] px-3 py-2 rounded-lg">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Data stays in your browser.
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Form Side -->
+        <div class="space-y-4">
+            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold">Invoice details</h2>
+                    <button id="reset-btn" class="text-sm text-primary-300 hover:text-primary-200">Reset</button>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Invoice Number</span>
+                        <input data-field="invoiceNumber" type="text" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="INV-2026-001">
+                    </label>
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Issue Date</span>
+                        <input data-field="issueDate" type="date" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm">
+                    </label>
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Due Date</span>
+                        <input data-field="dueDate" type="date" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm">
+                    </label>
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Notes</span>
+                        <textarea data-field="notes" rows="2" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="Thank you for your business."></textarea>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-4">
+                <h2 class="text-xl font-semibold">From (Your details)</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Business Name</span>
+                        <input data-field="fromName" type="text" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="Your company">
+                    </label>
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Email</span>
+                        <input data-field="fromEmail" type="email" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="you@example.com">
+                    </label>
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Phone</span>
+                        <input data-field="fromPhone" type="text" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="+91 00000 00000">
+                    </label>
+                    <label class="space-y-1 text-sm md:col-span-2">
+                        <span class="text-zinc-400">Address</span>
+                        <textarea data-field="fromAddress" rows="2" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="Street, City, State"></textarea>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-4">
+                <h2 class="text-xl font-semibold">Bill To (Client)</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Client Name</span>
+                        <input data-field="clientName" type="text" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="Client name">
+                    </label>
+                    <label class="space-y-1 text-sm">
+                        <span class="text-zinc-400">Client Email</span>
+                        <input data-field="clientEmail" type="email" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="client@example.com">
+                    </label>
+                    <label class="space-y-1 text-sm md:col-span-2">
+                        <span class="text-zinc-400">Client Address</span>
+                        <textarea data-field="clientAddress" rows="2" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-3 py-2 text-sm" placeholder="Street, City, State"></textarea>
+                    </label>
+                </div>
+            </div>
+
+            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold">Line Items</h2>
+                    <button id="add-item" class="px-3 py-1 text-sm rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]">Add item</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="text-zinc-400 border-b border-white/[0.06]">
+                            <tr>
+                                <th class="text-left py-2">Description</th>
+                                <th class="text-right py-2">Qty</th>
+                                <th class="text-right py-2">Rate</th>
+                                <th class="text-right py-2">Tax %</th>
+                                <th class="text-right py-2">Amount</th>
+                                <th class="py-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-body" class="divide-y divide-white/[0.04]"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="download-btn" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-lg text-sm font-semibold shadow-lg shadow-primary-500/25 transition-all">
+                    Download / Print PDF
+                </button>
+                <p class="text-xs text-zinc-500 self-center">A faint Qupr Digital watermark is embedded in the invoice preview.</p>
+            </div>
+        </div>
+
+        <!-- Preview Side -->
+        <div id="invoice-preview" class="relative bg-white text-zinc-900 rounded-2xl border border-white/[0.08] shadow-2xl overflow-hidden">
+            <div class="p-8 space-y-6 relative">
+                <div class="flex flex-col sm:flex-row justify-between gap-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.2em] text-primary-700">Invoice</p>
+                        <h2 class="text-2xl font-bold" id="preview-invoice-number">INV-0001</h2>
+                        <p class="text-sm text-zinc-600">Issue: <span id="preview-issue-date">—</span> · Due: <span id="preview-due-date">—</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-lg font-semibold" id="preview-from-name">Qupr Digital</p>
+                        <p class="text-sm" id="preview-from-email">contact@qupr.digital</p>
+                        <p class="text-sm" id="preview-from-phone">—</p>
+                        <p class="text-sm" id="preview-from-address">—</p>
+                    </div>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4 bg-zinc-50 rounded-xl p-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Bill To</p>
+                        <p class="font-semibold" id="preview-client-name">Client Name</p>
+                        <p class="text-sm text-zinc-600" id="preview-client-email">client@example.com</p>
+                        <p class="text-sm text-zinc-600" id="preview-client-address">—</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs uppercase tracking-[0.2em] text-zinc-500">Notes</p>
+                        <p class="text-sm text-zinc-700" id="preview-notes">Thank you for your business.</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="border-b border-zinc-200 text-zinc-500">
+                            <tr>
+                                <th class="text-left py-2">Description</th>
+                                <th class="text-right py-2">Qty</th>
+                                <th class="text-right py-2">Rate</th>
+                                <th class="text-right py-2">Tax</th>
+                                <th class="text-right py-2">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="preview-items" class="divide-y divide-zinc-200"></tbody>
+                    </table>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-end gap-4">
+                    <div class="w-full sm:w-64 space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-zinc-600">Subtotal</span>
+                            <span id="preview-subtotal" class="font-semibold">Rs. 0.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-zinc-600">Tax</span>
+                            <span id="preview-tax" class="font-semibold">Rs. 0.00</span>
+                        </div>
+                        <div class="flex justify-between text-base font-semibold border-t border-zinc-200 pt-2">
+                            <span>Total</span>
+                            <span id="preview-total">Rs. 0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-xs text-zinc-500 border-t border-zinc-200 pt-4">
+                    Generated free at quprdigital.tk — watermark retained on print.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const today = new Date().toISOString().slice(0, 10);
+    const defaults = {
+        invoiceNumber: `INV-${today.replace(/-/g, '')}-001`,
+        issueDate: today,
+        dueDate: today,
+        notes: 'Thank you for your business.',
+        fromName: '{{ config.COMPANY_NAME }}',
+        fromEmail: '{{ config.COMPANY_EMAIL }}',
+        fromPhone: '{{ config.COMPANY_PHONE }}',
+        fromAddress: '{{ config.COMPANY_ADDRESS }}',
+        clientName: 'Client Name',
+        clientEmail: 'client@example.com',
+        clientAddress: 'Client address here'
+    };
+
+    let state = { ...defaults };
+    let items = [ { description: 'Service fee', qty: 1, rate: 0, tax: 0 } ];
+
+    const fieldEls = document.querySelectorAll('[data-field]');
+    const itemsBody = document.getElementById('items-body');
+    const previewItems = document.getElementById('preview-items');
+
+    const previewMap = {
+        invoiceNumber: document.getElementById('preview-invoice-number'),
+        issueDate: document.getElementById('preview-issue-date'),
+        dueDate: document.getElementById('preview-due-date'),
+        notes: document.getElementById('preview-notes'),
+        fromName: document.getElementById('preview-from-name'),
+        fromEmail: document.getElementById('preview-from-email'),
+        fromPhone: document.getElementById('preview-from-phone'),
+        fromAddress: document.getElementById('preview-from-address'),
+        clientName: document.getElementById('preview-client-name'),
+        clientEmail: document.getElementById('preview-client-email'),
+        clientAddress: document.getElementById('preview-client-address'),
+        subtotal: document.getElementById('preview-subtotal'),
+        tax: document.getElementById('preview-tax'),
+        total: document.getElementById('preview-total')
+    };
+
+    function formatCurrency(n) {
+        return `Rs. ${Number(n || 0).toFixed(2)}`;
+    }
+
+    function renderItemsForm() {
+        itemsBody.innerHTML = '';
+        items.forEach((item, idx) => {
+            const tr = document.createElement('tr');
+            tr.className = 'align-top';
+            tr.innerHTML = `
+                <td class="py-2 pr-2">
+                    <input data-idx="${idx}" data-key="description" type="text" value="${item.description}" class="w-full rounded-lg bg-white/[0.03] border border-white/[0.07] px-2 py-1 text-sm" placeholder="Description">
+                </td>
+                <td class="py-2 pr-2 text-right">
+                    <input data-idx="${idx}" data-key="qty" type="number" step="1" min="0" value="${item.qty}" class="w-20 text-right rounded-lg bg-white/[0.03] border border-white/[0.07] px-2 py-1 text-sm">
+                </td>
+                <td class="py-2 pr-2 text-right">
+                    <input data-idx="${idx}" data-key="rate" type="number" step="0.01" min="0" value="${item.rate}" class="w-24 text-right rounded-lg bg-white/[0.03] border border-white/[0.07] px-2 py-1 text-sm">
+                </td>
+                <td class="py-2 pr-2 text-right">
+                    <input data-idx="${idx}" data-key="tax" type="number" step="0.01" min="0" value="${item.tax}" class="w-20 text-right rounded-lg bg-white/[0.03] border border-white/[0.07] px-2 py-1 text-sm">
+                </td>
+                <td class="py-2 pr-2 text-right text-zinc-200">
+                    ${formatCurrency((item.qty || 0) * (item.rate || 0) * (1 + (item.tax || 0) / 100))}
+                </td>
+                <td class="py-2 text-right">
+                    <button data-remove="${idx}" class="text-xs text-zinc-400 hover:text-red-400">Remove</button>
+                </td>`;
+            itemsBody.appendChild(tr);
+        });
+    }
+
+    function renderPreview() {
+        previewMap.invoiceNumber.textContent = state.invoiceNumber || 'INV-0001';
+        previewMap.issueDate.textContent = state.issueDate || '—';
+        previewMap.dueDate.textContent = state.dueDate || '—';
+        previewMap.notes.textContent = state.notes || '—';
+        previewMap.fromName.textContent = state.fromName || '—';
+        previewMap.fromEmail.textContent = state.fromEmail || '—';
+        previewMap.fromPhone.textContent = state.fromPhone || '—';
+        previewMap.fromAddress.textContent = state.fromAddress || '—';
+        previewMap.clientName.textContent = state.clientName || '—';
+        previewMap.clientEmail.textContent = state.clientEmail || '—';
+        previewMap.clientAddress.textContent = state.clientAddress || '—';
+
+        previewItems.innerHTML = '';
+        let subtotal = 0;
+        let taxTotal = 0;
+        items.forEach(item => {
+            const qty = Number(item.qty) || 0;
+            const rate = Number(item.rate) || 0;
+            const tax = Number(item.tax) || 0;
+            const lineBase = qty * rate;
+            const lineTax = lineBase * (tax / 100);
+            const lineTotal = lineBase + lineTax;
+            subtotal += lineBase;
+            taxTotal += lineTax;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="py-2 pr-2">${item.description || '—'}</td>
+                <td class="py-2 pr-2 text-right">${qty.toFixed(2)}</td>
+                <td class="py-2 pr-2 text-right">${formatCurrency(rate)}</td>
+                <td class="py-2 pr-2 text-right">${tax.toFixed(2)}%</td>
+                <td class="py-2 pr-2 text-right">${formatCurrency(lineTotal)}</td>`;
+            previewItems.appendChild(tr);
+        });
+
+        previewMap.subtotal.textContent = formatCurrency(subtotal);
+        previewMap.tax.textContent = formatCurrency(taxTotal);
+        previewMap.total.textContent = formatCurrency(subtotal + taxTotal);
+    }
+
+    function wireForm() {
+        fieldEls.forEach(el => {
+            const key = el.dataset.field;
+            el.value = state[key] || '';
+            el.addEventListener('input', (e) => {
+                state[key] = e.target.value;
+                renderPreview();
+            });
+        });
+
+        itemsBody.addEventListener('input', (e) => {
+            const idx = Number(e.target.dataset.idx);
+            const key = e.target.dataset.key;
+            if (Number.isInteger(idx) && key) {
+                const value = key === 'description' ? e.target.value : Number(e.target.value || 0);
+                items[idx][key] = value;
+                renderPreview();
+                renderItemsForm();
+            }
+        });
+
+        itemsBody.addEventListener('click', (e) => {
+            const removeIdx = e.target.dataset.remove;
+            if (removeIdx !== undefined) {
+                const idx = Number(removeIdx);
+                items.splice(idx, 1);
+                if (items.length === 0) {
+                    items.push({ description: 'New item', qty: 1, rate: 0, tax: 0 });
+                }
+                renderItemsForm();
+                renderPreview();
+            }
+        });
+
+        document.getElementById('add-item').addEventListener('click', () => {
+            items.push({ description: 'New item', qty: 1, rate: 0, tax: 0 });
+            renderItemsForm();
+            renderPreview();
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            state = { ...defaults, issueDate: new Date().toISOString().slice(0, 10), dueDate: new Date().toISOString().slice(0, 10) };
+            items = [ { description: 'Service fee', qty: 1, rate: 0, tax: 0 } ];
+            fieldEls.forEach(el => {
+                const key = el.dataset.field;
+                el.value = state[key] || '';
+            });
+            renderItemsForm();
+            renderPreview();
+        });
+
+        document.getElementById('download-btn').addEventListener('click', () => {
+            window.print();
+        });
+    }
+
+    renderItemsForm();
+    renderPreview();
+    wireForm();
+})();
+</script>
+{% endblock %}

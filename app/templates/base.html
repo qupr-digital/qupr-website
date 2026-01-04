@@ -100,6 +100,7 @@
                         {% if current_user.role != 'OWNER' %}
                         <a href="{{ url_for('invoices.list_invoices') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">My Invoices</a>
                         {% endif %}                        
+                        <a href="{{ url_for('public.free_invoice_maker') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Free Invoice Maker</a>
                         <a href="{{ url_for('public.about') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">About Us</a>    
                         <a href="{{ url_for('public.contact') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Contact Us</a>    
                         <a href="{{ url_for('public.careers') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Careers</a>
@@ -118,6 +119,7 @@
                     <nav class="hidden md:flex items-center gap-1">
                         <a href="{{ url_for('public.index') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Home</a>
                         <a href="/#services" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Services</a>
+                        <a href="{{ url_for('public.free_invoice_maker') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Free Invoice Maker</a>
                         <a href="{{ url_for('public.about') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">About Us</a>    
                         <a href="{{ url_for('public.contact') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Contact Us</a>    
                         <a href="{{ url_for('public.careers') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Careers</a>
