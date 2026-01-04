@@ -80,3 +80,9 @@ class Product:
             'name': {'$regex': query, '$options': 'i'},
             'is_active': True
         }).sort('name', 1))
+
+    @staticmethod
+    def get_all():
+        """Get all products"""
+        db = get_db()
+        return list(db.products.find().sort('name', 1))

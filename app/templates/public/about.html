@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}About Qupr Digital{% endblock %}
+
+{% block content %}
+<section class="py-16">
+    <div class="max-w-4xl mx-auto space-y-8">
+        <div class="space-y-3">
+            <p class="text-sm uppercase tracking-[0.2em] text-primary-300/80">About Us</p>
+            <h1 class="text-4xl font-bold">Building quietly, shipping deliberately</h1>
+            <p class="text-zinc-300 leading-relaxed">Qupr Digital started in 2020 as a focused digital marketing shop. Over time we shifted from campaigns to code, moving deeper into technology, infrastructure, and product development. Today we build developer-first fintech and SaaS products with clean APIs, purposeful UX, and systems designed to scale.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5">
+                <p class="text-sm text-zinc-500">2020 → Early Years</p>
+                <h3 class="text-lg font-semibold">Digital Marketing Roots</h3>
+                <p class="text-zinc-300 text-sm leading-relaxed">Learned how businesses grow, what teams need, and why clear reporting matters.</p>
+            </div>
+            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5">
+                <p class="text-sm text-zinc-500">2021-2023 → Shift</p>
+                <h3 class="text-lg font-semibold">Technology & Systems</h3>
+                <p class="text-zinc-300 text-sm leading-relaxed">Built web and app platforms, infrastructure, and tooling for reliability and scale.</p>
+            </div>
+            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5">
+                <p class="text-sm text-zinc-500">Now</p>
+                <h3 class="text-lg font-semibold">Product Company</h3>
+                <p class="text-zinc-300 text-sm leading-relaxed">Shipping fintech and SaaS products with developer-first APIs and thoughtful UX.</p>
+            </div>
+        </div>
+
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-4">
+            <h2 class="text-2xl font-semibold">What we focus on</h2>
+            <ul class="space-y-3 text-zinc-300">
+                <li class="flex gap-3"><span class="text-primary-300">•</span><span>Fintech workflows that keep correctness, compliance, and auditability front and center.</span></li>
+                <li class="flex gap-3"><span class="text-primary-300">•</span><span>SaaS products with clean, predictable APIs and a developer-first experience.</span></li>
+                <li class="flex gap-3"><span class="text-primary-300">•</span><span>Systems design for scalability, observability, and low operational noise.</span></li>
+                <li class="flex gap-3"><span class="text-primary-300">•</span><span>UX that stays simple, honest, and fast to use.</span></li>
+            </ul>
+        </div>
+
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-4">
+            <h2 class="text-2xl font-semibold">How we work</h2>
+            <div class="grid md:grid-cols-2 gap-4 text-zinc-300">
+                <div class="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
+                    <h3 class="font-semibold mb-1">Clarity over hype</h3>
+                    <p class="text-sm leading-relaxed">Straightforward language, realistic promises, and shipping when things are ready.</p>
+                </div>
+                <div class="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
+                    <h3 class="font-semibold mb-1">Correctness first</h3>
+                    <p class="text-sm leading-relaxed">APIs, data, and interfaces that default to safe, predictable behavior.</p>
+                </div>
+                <div class="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
+                    <h3 class="font-semibold mb-1">Long-term thinking</h3>
+                    <p class="text-sm leading-relaxed">Choices that age well: maintainable code, measurable systems, and stable contracts.</p>
+                </div>
+                <div class="bg-white/[0.02] border border-white/[0.05] rounded-xl p-4">
+                    <h3 class="font-semibold mb-1">Simple by design</h3>
+                    <p class="text-sm leading-relaxed">Small, composable parts that stay understandable as products grow.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

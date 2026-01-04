@@ -7,7 +7,7 @@
 <section class="relative py-20 lg:py-32 -mt-8">
     <div class="absolute inset-0"></div>
     <div class="relative text-center max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-sm text-zinc-400 mb-8">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-sm text-zinc-400 mb-8 hover:bg-white/[0.06] hover:border-emerald-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             Trusted by 50+ businesses
         </div>
@@ -21,12 +21,11 @@
             </span>
         </h1>
         <p class="text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            From custom web and app development to secure hosting and operations,
-            Qupr Digital helps businesses ship and scale with confidence.
+            We provide reliable, scalable digital solutions including hosting, app development, and web platforms to help your business thrive.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ url_for('auth.login') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold shadow-2xl shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-1">
-                Get Started Free
+            <a href="{{ url_for('public.about') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold shadow-2xl shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-1">
+                About Us
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
             </a>
             <a href="#services" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/[0.15] text-zinc-300 rounded-xl font-semibold transition-all">
@@ -115,6 +114,55 @@
             <p class="text-zinc-400 leading-relaxed">Professional websites and web platforms tailored to your needs. SEO-optimized and lightning fast.</p>
         </div>
     </div>
+</section>
+
+<!-- Products pulled from DB -->
+<section id="products" class="py-20">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold mb-3">Products</h2>
+        <p class="text-zinc-400 text-lg max-w-2xl mx-auto">
+            Explore our range of products designed to streamline your business operations.
+        </p>
+    </div>
+
+    {% if products and products|length > 0 %}
+    <div class="grid md:grid-cols-3 gap-6">
+        {% for product in products %}
+        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 hover:border-white/[0.12] transition-all">
+            <div class="flex items-start justify-between gap-3 mb-4">
+                <div>
+                    <h3 class="text-xl font-semibold">{{ product['name'] }}</h3>
+                    <p class="text-sm text-zinc-500">HSN: {{ product.get('hsn', 'N/A') }}</p>
+                </div>
+                {% if product.get('is_active') %}
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">Active</span>
+                {% else %}
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-700/50 text-zinc-200 border border-zinc-600">Inactive</span>
+                {% endif %}
+            </div>
+
+            <p class="text-zinc-300 leading-relaxed mb-6">{{ product.get('description', 'No description available.') }}</p>
+
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="bg-white/[0.02] rounded-xl p-3 border border-white/[0.06]">
+                    <p class="text-zinc-500">Rate</p>
+                    <p class="text-white font-semibold">Rs. {{ '%.2f'|format(product.get('rate', 0)) }}</p>
+                </div>
+                <div class="bg-white/[0.02] rounded-xl p-3 border border-white/[0.06]">
+                    <p class="text-zinc-500">Tax Rate</p>
+                    <p class="text-white font-semibold">{{ '%.2f'|format(product.get('tax_rate', 0)) }}%</p>
+                </div>
+                <div class="bg-white/[0.02] rounded-xl p-3 border border-white/[0.06] col-span-2">
+                    <p class="text-zinc-500">ID</p>
+                    <p class="text-xs text-zinc-300 break-all">{{ product.get('_id') }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center text-zinc-400">No products found.</div>
+    {% endif %}
 </section>
 
 <!-- Testimonials -->
@@ -209,10 +257,10 @@
             <span class="font-semibold">Qupr Digital</span>
         </div>
         <div class="flex items-center gap-8 text-sm text-zinc-500">
-            <a href="mailto:contact.shashankpandey04@gmail.com" class="hover:text-white transition-colors">contact.shashankpandey04@gmail.com</a>
+            <a href="mailto:{{ config.COMPANY_EMAIL }}" class="hover:text-white transition-colors">{{ config.COMPANY_EMAIL }}</a>
             <!-- <span>{{ config.COMPANY_PHONE }}</span> -->
         </div>
-        <p class="text-sm text-zinc-500">© <span id="year"></span> Qupr Digital. All rights reserved.</p>
+        <p class="text-sm text-zinc-500">© 2020 - <span id="year"></span> Qupr Digital. All rights reserved.</p>
     </div>
 </footer>
 <script>

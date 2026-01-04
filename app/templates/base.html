@@ -69,7 +69,11 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-
+<style>
+    body::-webkit-scrollbar { width: 8px; }
+    body::-webkit-scrollbar-track { background: transparent; }
+    body::-webkit-scrollbar-thumb { background-color: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+</style>
 <body class="bg-[#09090b] text-zinc-100 min-h-screen antialiased">
     <div class="fixed inset-0 bg-glow pointer-events-none"></div>
 
@@ -91,14 +95,14 @@
                 </a>
                     {% if current_user %}
                     <nav class="hidden md:flex items-center gap-1">
+                        <a href="{{ url_for('public.index') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Home</a>
                         <a href="{{ url_for('dashboard.index') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Dashboard</a>
-                        {% if current_user.role == 'OWNER' %}
-                        <a href="{{ url_for('invoices.list_invoices') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Invoices</a>
-                        <a href="{{ url_for('clients.list_clients') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Clients</a>
-                        <a href="{{ url_for('products.list_products') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Products</a>
-                        {% else %}
+                        {% if current_user.role != 'OWNER' %}
                         <a href="{{ url_for('invoices.list_invoices') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">My Invoices</a>
-                        {% endif %}
+                        {% endif %}                        
+                        <a href="{{ url_for('public.about') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">About Us</a>    
+                        <a href="{{ url_for('public.contact') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Contact Us</a>    
+                        <a href="{{ url_for('public.careers') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Careers</a>
                     </nav>
 
                     <div class="flex items-center gap-4">
@@ -111,9 +115,14 @@
                         <a href="{{ url_for('auth.logout') }}" class="px-4 py-2 text-sm text-zinc-400 hover:text-white border border-white/[0.08] hover:border-white/[0.15] rounded-lg transition-all hover:bg-white/[0.02]">Logout</a>
                     </div>
                     {% else %}
-                    <div class="flex items-center gap-3">
-                        <a href="{{ url_for('auth.login') }}" class="px-5 py-2.5 text-sm font-medium rounded-lg bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-0.5">Sign In</a>
-                    </div>
+                    <nav class="hidden md:flex items-center gap-1">
+                        <a href="{{ url_for('public.index') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Home</a>
+                        <a href="/#services" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Services</a>
+                        <a href="{{ url_for('public.about') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">About Us</a>    
+                        <a href="{{ url_for('public.contact') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Contact Us</a>    
+                        <a href="{{ url_for('public.careers') }}" class="nav-link px-4 py-2 text-sm text-zinc-400 hover:text-white transition-colors">Careers</a>
+                        <a href="{{ url_for('auth.login') }}" class="px-4 py-2 text-sm text-zinc-400 hover:text-white border border-white/[0.08] hover:border-white/[0.15] rounded-lg transition-all hover:bg-white/[0.02]">Login</a>  
+                    </nav>
                     {% endif %}
                 </div>
             </div>
