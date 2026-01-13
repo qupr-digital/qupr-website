@@ -4,115 +4,200 @@
 
 {% block content %}
 <!-- Header -->
-<div class="mb-10">
-    <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">My Invoices</h1>
-    <p class="text-zinc-500 mt-1">View and download your invoices</p>
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-white mb-2">Invoice Portal</h1>
+        <p class="text-zinc-400">Manage your invoices and payments</p>
+    </div>
+    {% if pending_amount > 0 %}
+    <div class="flex items-center gap-3 px-5 py-3 bg-gradient-to-r from-amber-500/20 to-amber-500/10 border border-amber-500/30 rounded-xl">
+        <svg class="w-5 h-5 text-amber-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        <span class="text-sm font-semibold text-amber-300">{{ issued_invoices }} payment{{ 's' if issued_invoices != 1 else '' }} pending</span>
+    </div>
+    {% endif %}
 </div>
 
+<!-- Payment Status Banner -->
+{% if pending_amount > 0 %}
+<div class="bg-gradient-to-br from-amber-500/15 via-amber-500/10 to-amber-500/5 border-2 border-amber-500/30 rounded-2xl p-8 mb-8 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full -mr-32 -mt-32"></div>
+    <div class="relative">
+        <div class="flex items-start justify-between">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                        <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Outstanding Balance</h2>
+                        <p class="text-sm text-amber-300/80">Please clear pending invoices to avoid service interruption</p>
+                    </div>
+                </div>
+                <div class="flex items-baseline gap-3 mb-4">
+                    <span class="text-5xl font-bold text-white">₹{{ "%.2f"|format(pending_amount) }}</span>
+                    <span class="text-lg text-amber-300">due</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center px-3 py-1.5 bg-amber-500/30 text-amber-200 rounded-lg text-sm font-semibold">
+                        <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+                        {{ issued_invoices }} invoice{{ 's' if issued_invoices != 1 else '' }} awaiting payment
+                    </span>
+                </div>
+            </div>
+            <div class="flex flex-col gap-3">
+                <a href="#pending-invoices" class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-xl font-semibold shadow-lg shadow-amber-500/30 transition-all hover:shadow-amber-500/50 text-center">
+                    View Pending Invoices
+                </a>
+                <p class="text-xs text-amber-300/70 text-center">Scroll down to pay</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="bg-gradient-to-br from-emerald-500/15 via-emerald-500/10 to-emerald-500/5 border-2 border-emerald-500/30 rounded-2xl p-8 mb-8 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full -mr-32 -mt-32"></div>
+    <div class="relative flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
+                <svg class="w-9 h-9 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-white mb-1">All Caught Up!</h2>
+                <p class="text-emerald-300">You have no pending payments. Thank you for staying current!</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-emerald-300/70 mb-1">Total Paid</p>
+            <p class="text-3xl font-bold text-emerald-400">₹{{ "%.2f"|format(total_amount - pending_amount) }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Stats Grid -->
-<div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-primary-500/30 rounded-2xl p-5 transition-all cursor-default">
-        <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    <div class="relative bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/20 rounded-2xl p-6 overflow-hidden hover:border-emerald-500/40 transition-all">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full -mr-12 -mt-12"></div>
         <div class="relative">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total</span>
-                <div class="w-8 h-8 rounded-lg bg-primary-500/10 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Paid</span>
+                <div class="p-2 bg-emerald-500/10 rounded-lg">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-white">{{ total_invoices }}</p>
+            <h3 class="text-3xl font-bold text-white mb-2">{{ paid_invoices }}</h3>
+            <p class="text-xs text-emerald-300/70">invoices settled</p>
         </div>
     </div>
 
-    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-amber-500/30 rounded-2xl p-5 transition-all cursor-default">
-        <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <div class="relative bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 rounded-2xl p-6 overflow-hidden hover:border-amber-500/40 transition-all">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full -mr-12 -mt-12"></div>
         <div class="relative">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Pending</span>
-                <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Pending</span>
+                <div class="p-2 bg-amber-500/10 rounded-lg">
+                    <svg class="w-5 h-5 text-amber-400 {% if issued_invoices > 0 %}animate-pulse{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-amber-400">{{ issued_invoices }}</p>
+            <h3 class="text-3xl font-bold text-white mb-2">{{ issued_invoices }}</h3>
+            <p class="text-xs text-amber-300/70">awaiting payment</p>
         </div>
     </div>
 
-    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-emerald-500/30 rounded-2xl p-5 transition-all cursor-default">
-        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <div class="relative bg-gradient-to-br from-primary-500/10 via-primary-500/5 to-transparent border border-primary-500/20 rounded-2xl p-6 overflow-hidden hover:border-primary-500/40 transition-all">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-primary-500/5 rounded-full -mr-12 -mt-12"></div>
         <div class="relative">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Paid</span>
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-primary-400 uppercase tracking-widest">Total Billed</span>
+                <div class="p-2 bg-primary-500/10 rounded-lg">
+                    <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-emerald-400">{{ paid_invoices }}</p>
+            <h3 class="text-2xl font-bold text-white mb-2">₹{{ "%.0f"|format(total_amount) }}</h3>
+            <p class="text-xs text-primary-300/70">{{ total_invoices }} invoices</p>
         </div>
     </div>
 
-    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-blue-500/30 rounded-2xl p-5 transition-all cursor-default">
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <div class="relative bg-gradient-to-br from-violet-500/10 via-violet-500/5 to-transparent border border-violet-500/20 rounded-2xl p-6 overflow-hidden hover:border-violet-500/40 transition-all">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-violet-500/5 rounded-full -mr-12 -mt-12"></div>
         <div class="relative">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total Billed</span>
-                <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="flex items-center justify-between mb-4">
+                <span class="text-xs font-bold text-violet-400 uppercase tracking-widest">Payment Rate</span>
+                <div class="p-2 bg-violet-500/10 rounded-lg">
+                    <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                 </div>
             </div>
-            <p class="text-xl font-bold text-white">₹{{ "%.0f"|format(total_amount) }}</p>
-        </div>
-    </div>
-
-    <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-red-500/30 rounded-2xl p-5 transition-all cursor-default">
-        <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <div class="relative">
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-medium text-zinc-500 uppercase tracking-wider">Due</span>
-                <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-            </div>
-            <p class="text-xl font-bold text-red-400">₹{{ "%.0f"|format(pending_amount) }}</p>
+            <h3 class="text-3xl font-bold text-white mb-2">
+                {% if total_invoices > 0 %}
+                    {{ "%.0f"|format((paid_invoices / total_invoices) * 100) }}%
+                {% else %}
+                    0%
+                {% endif %}
+            </h3>
+            <p class="text-xs text-violet-300/70">on-time payments</p>
         </div>
     </div>
 </div>
 
 <!-- Invoices List -->
-<div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
-    <div class="px-6 py-4 border-b border-white/[0.06]">
-        <h2 class="text-lg font-semibold">Your Invoices</h2>
+<div id="pending-invoices" class="bg-white/[0.02] border border-white/[0.06] rounded-2xl overflow-hidden">
+    <div class="px-6 py-5 border-b border-white/[0.06] bg-gradient-to-r from-white/[0.02] to-transparent">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-lg font-bold text-white">Your Invoices</h2>
+                <p class="text-xs text-zinc-500 mt-1">Click on any invoice to view details and make payment</p>
+            </div>
+            {% if issued_invoices > 0 %}
+            <span class="px-4 py-2 bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded-lg text-sm font-semibold">
+                {{ issued_invoices }} pending
+            </span>
+            {% endif %}
+        </div>
     </div>
     {% if invoices %}
     <div class="divide-y divide-white/[0.04]">
         {% for invoice in invoices %}
-        <div class="flex items-center justify-between px-6 py-4 hover:bg-white/[0.02] transition-colors group">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center">
-                    <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <div class="flex items-center justify-between px-6 py-5 hover:bg-white/[0.03] transition-colors group {% if invoice.status == 'ISSUED' %}bg-amber-500/5{% endif %}">
+            <div class="flex items-center gap-5 flex-1">
+                <div class="w-14 h-14 rounded-2xl {% if invoice.status == 'ISSUED' %}bg-amber-500/20 border border-amber-500/30{% elif invoice.status == 'PAID' %}bg-emerald-500/20 border border-emerald-500/30{% else %}bg-white/[0.04] border border-white/[0.06]{% endif %} flex items-center justify-center">
+                    {% if invoice.status == 'ISSUED' %}
+                    <svg class="w-7 h-7 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    {% elif invoice.status == 'PAID' %}
+                    <svg class="w-7 h-7 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    {% else %}
+                    <svg class="w-7 h-7 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    {% endif %}
                 </div>
-                <div>
-                    <p class="font-mono text-sm font-medium text-white">{{ invoice.invoice_no }}</p>
-                    <p class="text-xs text-zinc-500">
-                        {% if invoice.issue_date %}{{ invoice.issue_date.strftime('%d %b %Y') }}{% else %}Not issued{% endif %}
-                        {% if invoice.due_date %} · Due {{ invoice.due_date.strftime('%d %b %Y') }}{% endif %}
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-1">
+                        <p class="font-mono text-base font-bold text-white">{{ invoice.invoice_no }}</p>
+                        {% if invoice.status == 'PAID' %}
+                        <span class="px-2.5 py-1 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 rounded-lg text-xs font-semibold">Paid</span>
+                        {% elif invoice.status == 'ISSUED' %}
+                        <span class="px-2.5 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 rounded-lg text-xs font-bold animate-pulse">Payment Due</span>
+                        {% else %}
+                        <span class="px-2.5 py-1 bg-zinc-500/15 border border-zinc-500/30 text-zinc-400 rounded-lg text-xs font-semibold">Draft</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-sm text-zinc-400">
+                        {% if invoice.issue_date %}Issued {{ invoice.issue_date.strftime('%d %b %Y') }}{% else %}Not issued yet{% endif %}
+                        {% if invoice.due_date and invoice.status == 'ISSUED' %} • <span class="text-amber-400 font-semibold">Due {{ invoice.due_date.strftime('%d %b %Y') }}</span>{% endif %}
                     </p>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-6">
                 <div class="text-right">
-                    <p class="font-semibold text-white">₹{{ "%.2f"|format(invoice.total) }}</p>
+                    <p class="text-xs text-zinc-500 mb-1">Amount</p>
+                    <p class="text-2xl font-bold text-white">₹{{ "%.2f"|format(invoice.total) }}</p>
                 </div>
-                {% if invoice.status == 'PAID' %}
-                <span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg text-xs font-medium">Paid</span>
-                {% elif invoice.status == 'ISSUED' %}
-                <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 rounded-lg text-xs font-medium">Pending</span>
-                {% else %}
-                <span class="px-2.5 py-1 bg-white/[0.06] text-zinc-400 rounded-lg text-xs font-medium">Draft</span>
-                {% endif %}
                 <div class="flex gap-2">
-                    <a href="{{ url_for('invoices.view_invoice', invoice_id=invoice._id) }}" class="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 rounded-lg text-sm transition-all">View</a>
+                    <a href="{{ url_for('invoices.view_invoice', invoice_id=invoice._id) }}" class="px-5 py-2.5 {% if invoice.status == 'ISSUED' %}bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg shadow-amber-500/25{% else %}bg-white/[0.05] hover:bg-white/[0.10] border border-white/[0.10] text-zinc-300{% endif %} rounded-lg text-sm font-semibold transition-all">
+                        {% if invoice.status == 'ISSUED' %}Pay Now{% else %}View{% endif %}
+                    </a>
                     {% if invoice.status in ['ISSUED', 'PAID'] %}
-                    <a href="{{ url_for('invoices.print_invoice', invoice_id=invoice._id) }}" target="_blank" class="px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 rounded-lg text-sm transition-all">Print</a>
+                    <a href="{{ url_for('invoices.print_invoice', invoice_id=invoice._id) }}" target="_blank" class="px-4 py-2.5 bg-white/[0.05] hover:bg-white/[0.10] border border-white/[0.10] text-zinc-300 rounded-lg text-sm font-medium transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    </a>
                     {% endif %}
                 </div>
             </div>
@@ -120,12 +205,29 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="px-6 py-16 text-center">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-white/[0.04] flex items-center justify-center">
-            <svg class="w-8 h-8 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    <div class="px-6 py-20 text-center">
+        <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-primary-500/10 to-primary-500/5 flex items-center justify-center">
+            <svg class="w-10 h-10 text-primary-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
         </div>
-        <p class="text-zinc-500">No invoices yet</p>
+        <h3 class="text-lg font-semibold text-white mb-2">No invoices yet</h3>
+        <p class="text-zinc-500">Your invoices will appear here once they are created</p>
     </div>
     {% endif %}
 </div>
+
+<!-- Payment Info -->
+{% if issued_invoices > 0 %}
+<div class="mt-8 bg-gradient-to-br from-primary-500/10 to-primary-500/5 border border-primary-500/20 rounded-2xl p-6">
+    <div class="flex items-start gap-4">
+        <div class="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div class="flex-1">
+            <h3 class="text-sm font-bold text-primary-300 uppercase tracking-wider mb-2">Payment Information</h3>
+            <p class="text-zinc-300 text-sm leading-relaxed mb-3">Click "Pay Now" on any pending invoice to view payment details with UPI QR code for instant payment. Payment status updates within 24 hours of transaction.</p>
+            <p class="text-xs text-primary-300/70">Need help? Contact support at {{ config.COMPANY_EMAIL }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
