@@ -25,6 +25,7 @@ class Coupon:
             'valid_from': valid_from,
             'valid_until': valid_until,
             'min_amount': float(min_amount) if min_amount else None,
+            'used_by': [],
             'created_at': datetime.now(timezone.utc),
             'updated_at': datetime.now(timezone.utc)
         }
@@ -57,7 +58,7 @@ class Coupon:
         return list(db.coupons.find().sort('created_at', -1))
     
     @staticmethod
-    def validate_coupon(code, amount):
+    def validate_coupon(code, amount, user_id=None):
         """Validate coupon and return discount details"""
         coupon = Coupon.get_by_code(code)
         
@@ -66,6 +67,10 @@ class Coupon:
         
         if not coupon.get('is_active'):
             return {'valid': False, 'error': 'Coupon is inactive'}
+        
+        # Check if user has already used this coupon (one-time use per user)
+        if user_id and user_id in coupon.get('used_by', []):
+            return {'valid': False, 'error': 'You have already used this coupon code'}
         
         # Check max uses
         if coupon.get('max_uses') and coupon.get('times_used', 0) >= coupon.get('max_uses'):
@@ -124,12 +129,18 @@ class Coupon:
         return result.modified_count > 0
     
     @staticmethod
-    def increment_use(coupon_id):
-        """Increment coupon usage count"""
+    def increment_use(coupon_id, user_id=None):
+        """Increment coupon usage count and track user"""
         db = get_db()
+        update_data = {'$inc': {'used_count': 1}, '$set': {'updated_at': datetime.now(timezone.utc)}}
+        
+        # Add user to used_by list if user_id is provided
+        if user_id:
+            update_data['$addToSet'] = {'used_by': user_id}
+        
         result = db.coupons.update_one(
             {'_id': ObjectId(coupon_id)},
-            {'$inc': {'used_count': 1}, '$set': {'updated_at': datetime.now(timezone.utc)}}
+            update_data
         )
         return result.modified_count > 0
     

@@ -54,6 +54,10 @@ def view_invoice(invoice_id):
     if not can_view_invoice(user, invoice):
         abort(403)
     
+    # If this invoice was merged into another, redirect to the merged invoice
+    if invoice.get('merged_into'):
+        return redirect(url_for('invoices.view_invoice', invoice_id=invoice['merged_into']))
+    
     # Get client details
     client = Client.get_by_id(str(invoice['client_id']))
     
@@ -297,13 +301,22 @@ def payment_summary():
 @login_required
 def validate_coupon():
     """Validate coupon code and return discount"""
+    from app.models.user import User
+    
+    user = get_current_user()
     code = request.json.get('coupon_code', '').strip()
     amount = request.json.get('amount', 0)
     
     if not code:
         return jsonify({'valid': False, 'message': 'Coupon code required'})
     
-    result = Coupon.validate_coupon(code, amount)
+    # Get user_id based on role
+    if User.is_client(user):
+        user_id = str(user['client_id'])
+    else:
+        user_id = str(user['_id']) if '_id' in user else None
+    
+    result = Coupon.validate_coupon(code, amount, user_id=user_id)
     
     # Format response for frontend
     if result['valid']:
@@ -373,7 +386,10 @@ def process_payment():
         coupon_discount = 0
         coupon_id = None
         if coupon_code:
-            result = Coupon.validate_coupon(coupon_code, amount)
+            # Get user_id based on role
+            user_id = str(user['client_id']) if User.is_client(user) else str(user.get('_id', ''))
+            
+            result = Coupon.validate_coupon(coupon_code, amount, user_id=user_id)
             if result['valid']:
                 coupon_discount = result['discount']
                 coupon = Coupon.get_by_code(coupon_code)
@@ -451,9 +467,10 @@ def payment_success():
     for invoice_id in payment_data.get('invoice_ids', []):
         Invoice.update(invoice_id, status=Invoice.STATUS_PAID, paid_at=datetime.now(timezone.utc))
     
-    # Increment coupon usage if applied
+    # Increment coupon usage if applied (with user_id)
     if payment_data.get('coupon_id'):
-        Coupon.increment_use(payment_data['coupon_id'])
+        user_id = payment_data.get('client_id')
+        Coupon.increment_use(payment_data['coupon_id'], user_id=user_id)
     
     # Clear from session
     session.pop(f'payment_{payment_id}', None)
@@ -519,7 +536,7 @@ def merge_invoices():
             discount_value = 0
             
             if coupon_code:
-                coupon_result = Coupon.validate_coupon(coupon_code, merged_amount)
+                coupon_result = Coupon.validate_coupon(coupon_code, merged_amount, user_id=client_id_1)
                 if coupon_result['valid']:
                     coupon_discount = coupon_result['discount']
                     coupon = Coupon.get_by_code(coupon_code)
@@ -574,13 +591,13 @@ def merge_invoices():
             result = db.invoices.insert_one(merged_invoice)
             merged_invoice_id = str(result.inserted_id)
             
-            # Mark original invoices as paid (since they're merged)
-            Invoice.update(invoice_id_1, status=Invoice.STATUS_PAID, paid_at=datetime.now(timezone.utc))
-            Invoice.update(invoice_id_2, status=Invoice.STATUS_PAID, paid_at=datetime.now(timezone.utc))
+            # Mark original invoices as paid (since they're merged) and point to merged invoice
+            Invoice.update(invoice_id_1, status=Invoice.STATUS_PAID, paid_at=datetime.now(timezone.utc), merged_into=merged_invoice_id)
+            Invoice.update(invoice_id_2, status=Invoice.STATUS_PAID, paid_at=datetime.now(timezone.utc), merged_into=merged_invoice_id)
             
             # Increment coupon usage if applied
             if coupon_id:
-                Coupon.increment_use(coupon_id)
+                Coupon.increment_use(coupon_id, user_id=client_id_1)
             
             flash(f'Invoices merged successfully! New invoice #{new_invoice_number} created with combined amount ₹{final_amount:.2f}', 'success')
             return redirect(url_for('invoices.view_invoice', invoice_id=merged_invoice_id))

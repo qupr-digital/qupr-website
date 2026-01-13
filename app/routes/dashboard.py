@@ -68,7 +68,10 @@ def render_client_dashboard(user):
     client_id = user.get('client_id')
     
     # Get client's invoices
-    invoices = Invoice.get_all(client_id=str(client_id))
+    all_invoices = Invoice.get_all(client_id=str(client_id))
+    
+    # Filter out merged invoices (those that have been merged into another invoice)
+    invoices = [inv for inv in all_invoices if not inv.get('merged_into')]
     
     # Calculate statistics
     total_invoices = len(invoices)
