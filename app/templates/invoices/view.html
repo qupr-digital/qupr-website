@@ -4,42 +4,42 @@
 
 {% block content %}
 <!-- Navigation -->
-<div class="mb-8">
-    <a href="{{ url_for('invoices.list_invoices') }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-primary-400 transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+<div class="mb-4 sm:mb-8">
+    <a href="{{ url_for('invoices.list_invoices') }}" class="inline-flex items-center gap-2 px-3 py-2 sm:px-0 sm:py-0 bg-white/[0.03] sm:bg-transparent hover:bg-white/[0.06] sm:hover:bg-transparent border border-white/[0.06] sm:border-0 rounded-lg text-xs sm:text-sm text-zinc-400 hover:text-primary-400 transition-colors">
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
         Back to Invoices
     </a>
 </div>
 
 <!-- Main Header with Status -->
-<div class="bg-gradient-to-br from-white/[0.05] to-white/[0.02] border border-white/[0.06] rounded-2xl p-8 mb-8">
-    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+<div class="bg-gradient-to-br from-white/[0.05] to-white/[0.02] border border-white/[0.06] rounded-xl sm:rounded-2xl p-5 sm:p-8 mb-6 sm:mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-6">
         <div>
-            <div class="flex items-center gap-3 mb-4">
-                <h1 class="text-4xl font-bold font-mono text-white">{{ invoice.invoice_no }}</h1>
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold font-mono text-white break-all">{{ invoice.invoice_no }}</h1>
                 {% if invoice.status == 'PAID' %}
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 rounded-lg text-sm font-medium">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <span class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 rounded-lg text-xs sm:text-sm font-medium">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                     Paid
                 </span>
                 {% elif invoice.status == 'ISSUED' %}
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 rounded-lg text-sm font-medium">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zM9 9a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"/></svg>
+                <span class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 rounded-lg text-xs sm:text-sm font-medium">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12zM9 9a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"/></svg>
                     Issued
                 </span>
                 {% else %}
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-500/15 border border-zinc-500/30 text-zinc-400 rounded-lg text-sm font-medium">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>
+                <span class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-zinc-500/15 border border-zinc-500/30 text-zinc-400 rounded-lg text-xs sm:text-sm font-medium">
+                    <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/></svg>
                     Draft
                 </span>
                 {% endif %}
             </div>
-            <p class="text-zinc-400 text-sm">Created on {{ invoice.issue_date.strftime('%d %B %Y') if invoice.issue_date else 'N/A' }}</p>
+            <p class="text-zinc-400 text-xs sm:text-sm">Created on {{ invoice.issue_date.strftime('%d %B %Y') if invoice.issue_date else 'N/A' }}</p>
         </div>
-        <div class="flex flex-wrap gap-2 sm:flex-nowrap">
-            <a href="{{ url_for('invoices.print_invoice', invoice_id=invoice._id) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.10] text-zinc-300 rounded-xl font-medium transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                Print
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ url_for('invoices.print_invoice', invoice_id=invoice._id) }}" target="_blank" class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.10] text-zinc-300 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm transition-all">
+                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                <span class="hidden sm:inline">Print</span>
             </a>
             {% if current_user.role == 'OWNER' %}
                 {% if invoice.status == 'DRAFT' %}
@@ -73,9 +73,9 @@
 </div>
 
 <!-- Content Grid -->
-<div class="grid lg:grid-cols-3 gap-8 mb-8">
+<div class="grid lg:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
     <!-- Main Content -->
-    <div class="lg:col-span-2 space-y-8">
+    <div class="lg:col-span-2 space-y-5 sm:space-y-8">
         <!-- Client Information Card -->
         <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
             <h3 class="text-lg font-semibold mb-6 flex items-center gap-2">
