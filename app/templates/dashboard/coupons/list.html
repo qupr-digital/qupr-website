@@ -67,15 +67,15 @@
                         <div class="mb-2">
                             <div class="flex justify-between text-sm mb-1">
                                 <span class="text-slate-400">Usage</span>
-                                <span class="text-white font-medium">{{ coupon.times_used }}/{{ coupon.max_uses }}</span>
+                                <span class="text-white font-medium">{{ coupon.get('used_count', 0) }}/{{ coupon.max_uses }}</span>
                             </div>
                             <div class="w-full bg-slate-600/30 rounded-full h-1.5">
-                                <div class="bg-blue-500 h-1.5 rounded-full" 
-                                     style="width: {% if coupon.max_uses > 0 %}{{ (coupon.times_used / coupon.max_uses * 100)|int }}{% else %}0{% endif %}%"></div>
+                                  <div class="bg-blue-500 h-1.5 rounded-full" 
+                                      style="width: {% if coupon.max_uses > 0 %}{{ ((coupon.get('used_count', 0) / coupon.max_uses) * 100)|int }}{% else %}0{% endif %}%"></div>
                             </div>
                         </div>
                         {% else %}
-                        <p class="text-sm text-slate-400">Usage: Unlimited ({{ coupon.times_used }} used)</p>
+                        <p class="text-sm text-slate-400">Usage: Unlimited ({{ coupon.get('used_count', 0) }} used)</p>
                         {% endif %}
                     </div>
 

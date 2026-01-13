@@ -72,8 +72,8 @@ class Coupon:
         if user_id and user_id in coupon.get('used_by', []):
             return {'valid': False, 'error': 'You have already used this coupon code'}
         
-        # Check max uses
-        if coupon.get('max_uses') and coupon.get('times_used', 0) >= coupon.get('max_uses'):
+        # Check max uses (use used_count with safe default)
+        if coupon.get('max_uses') and coupon.get('used_count', 0) >= coupon.get('max_uses'):
             return {'valid': False, 'error': 'Coupon usage limit exceeded'}
         
         # Check valid dates (only if dates are explicitly set)
