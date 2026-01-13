@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Confirmation - QuprBilling{% endblock %}
+
+{% block content %}
+<div class="min-h-screen pt-20 pb-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Success Header -->
+        <div class="mb-8 text-center">
+            <div class="inline-block p-4 bg-green-500/20 rounded-full mb-4">
+                <svg class="w-12 h-12 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-2">Payment Ready</h1>
+            <p class="text-slate-400">Scan the QR code or use the UPI link to complete payment</p>
+        </div>
+
+        <!-- Main Payment Card -->
+        <div class="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl overflow-hidden mb-8">
+            <!-- QR Code Section -->
+            <div class="p-8 bg-gradient-to-br from-slate-700/50 to-slate-800/50 border-b border-slate-700/50 flex flex-col items-center">
+                <h2 class="text-xl font-semibold text-white mb-6">Scan to Pay</h2>
+                
+                <!-- QR Code Container -->
+                <div class="bg-white p-6 rounded-lg mb-6">
+                    <div id="qrcode" style="width: 280px; height: 280px;"></div>
+                </div>
+
+                <!-- Amount Display -->
+                <div class="text-center">
+                    <p class="text-slate-400 text-sm mb-2">Total Amount Due</p>
+                    <div class="flex items-baseline gap-2 justify-center mb-4">
+                        <span class="text-5xl font-bold text-green-400">₹{{ "%.2f"|format(payment_data.final_amount) }}</span>
+                    </div>
+                    {% if payment_data.coupon_discount > 0 %}
+                    <p class="text-sm text-green-400">
+                        <span class="line-through text-slate-400">₹{{ "%.2f"|format(payment_data.subtotal) }}</span>
+                        Saved ₹{{ "%.2f"|format(payment_data.coupon_discount) }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Payment Details -->
+            <div class="p-8">
+                <h3 class="text-lg font-semibold text-white mb-6">Payment Details</h3>
+                
+                <!-- Summary -->
+                <div class="space-y-4 mb-8 pb-8 border-b border-slate-700/50">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400">Subtotal</span>
+                        <span class="text-white font-medium">₹{{ "%.2f"|format(payment_data.subtotal) }}</span>
+                    </div>
+                    {% if payment_data.coupon_discount > 0 %}
+                    <div class="flex justify-between">
+                        <div>
+                            <span class="text-slate-400">Discount</span>
+                            {% if payment_data.coupon_code %}
+                            <p class="text-xs text-blue-400">Code: {{ payment_data.coupon_code }}</p>
+                            {% endif %}
+                        </div>
+                        <span class="text-green-400 font-medium">-₹{{ "%.2f"|format(payment_data.coupon_discount) }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex justify-between items-center pt-4">
+                        <span class="text-slate-300 font-semibold">Total Due</span>
+                        <span class="text-2xl font-bold text-green-400">₹{{ "%.2f"|format(payment_data.final_amount) }}</span>
+                    </div>
+                </div>
+
+                <!-- Invoices -->
+                <div class="mb-8">
+                    <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Invoices Included ({{ payment_data.invoice_ids|length }})</h4>
+                    <div class="space-y-2">
+                        {% for invoice_id in payment_data.invoice_ids %}
+                        <div class="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
+                            <span class="text-slate-400 text-sm">Invoice #{{ loop.index }}</span>
+                            <span class="text-slate-300 font-mono text-xs">{{ invoice_id[:12] }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Payment Instructions -->
+                <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6 mb-8">
+                    <h4 class="text-sm font-semibold text-blue-300 mb-4">Payment Instructions</h4>
+                    <ol class="text-sm text-slate-300 space-y-3">
+                        <li class="flex gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold">1</span>
+                            <span>Scan the QR code with your phone's camera or UPI app</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold">2</span>
+                            <span>Amount of <strong>₹{{ "%.2f"|format(payment_data.final_amount) }}</strong> will be pre-filled</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold">3</span>
+                            <span>Complete the payment using your UPI app or bank account</span>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-500/30 flex items-center justify-center text-blue-400 text-xs font-bold">4</span>
+                            <span>We'll update your invoice status once payment is confirmed</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="bg-slate-700/30 rounded-lg p-6">
+                    <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3">Questions?</h4>
+                    <p class="text-slate-400 text-sm mb-2">Contact us for payment assistance:</p>
+                    <a href="tel:+91{{ payment_data.owner_phone }}" class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773c.346.72.827 1.365 1.426 1.964.599.599 1.243 1.08 1.964 1.426l.773-1.548a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 4 14.18 4 9.5S7.82 1 12.5 1h2a1 1 0 011 1v2.153z"/></svg>
+                        +91 {{ payment_data.owner_phone }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="{{ url_for('invoices.list_invoices') }}" class="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition text-center">
+                Back to Invoices
+            </a>
+            <button onclick="downloadQR()" class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition">
+                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download QR
+            </button>
+        </div>
+
+        <!-- Note -->
+        <div class="mt-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg text-center">
+            <p class="text-sm text-amber-300">💡 Keep this page open or screenshot the QR code for reference</p>
+        </div>
+    </div>
+</div>
+
+<!-- QR Code Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Generate QR code
+    const upiString = "{{ upi_string|safe }}";
+    
+    const qr = new QRCode(document.getElementById('qrcode'), {
+        text: upiString,
+        width: 280,
+        height: 280,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+});
+
+function downloadQR() {
+    const canvas = document.querySelector('#qrcode canvas');
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png');
+    link.download = 'payment-qr-₹{{ "%.0f"|format(payment_data.final_amount) }}.png';
+    link.click();
+}
+</script>
+
+<style>
+    #qrcode {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}

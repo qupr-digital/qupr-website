@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <div class="flex items-center gap-3 mb-2">
+            <h1 class="text-3xl font-bold text-white">Merge Invoices</h1>
+            <span class="px-3 py-1 bg-gradient-to-r from-blue-500/20 to-blue-600/20 border border-blue-500/30 text-blue-300 rounded-full text-xs font-semibold tracking-wide">
+                COMBINE & DISCOUNT
+            </span>
+        </div>
+        <p class="text-zinc-400">Combine two invoices into one with optional coupon discount</p>
+    </div>
+    <a href="{{ url_for('invoices.list_invoices') }}" class="px-4 py-2 bg-white/[0.05] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 rounded-lg text-sm font-medium transition-all">
+        ← Back to Invoices
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Form -->
+    <div class="lg:col-span-2 space-y-6">
+        <form method="POST" id="mergeForm" class="space-y-6">
+            <!-- Select Invoices Section -->
+            <div class="relative bg-gradient-to-br from-blue-500/5 via-blue-500/5 to-transparent border border-blue-500/20 rounded-2xl p-6 overflow-hidden group hover:border-blue-500/40 transition-all">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-blue-500/5 rounded-full -mr-20 -mt-20"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="p-2 bg-blue-500/10 rounded-lg">
+                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white">Select Invoices</h3>
+                    </div>
+
+                    {% if invoices_by_client %}
+                        {% for client_id, data in invoices_by_client.items() %}
+                            {% if data.invoices|length >= 2 %}
+                            <div class="mb-8 last:mb-0">
+                                <h4 class="text-sm font-bold text-blue-300 uppercase tracking-wider mb-4">{{ data.client.company_name or data.client.name }}</h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-zinc-300 mb-2">First Invoice</label>
+                                        <select class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/[0.1] text-white rounded-lg focus:border-blue-500/50 focus:outline-none transition-all text-sm"
+                                                name="invoice_id_1" id="invoice_id_1" required>
+                                            <option value="" class="bg-zinc-900">Select invoice...</option>
+                                            {% for inv in data.invoices %}
+                                            <option value="{{ inv._id }}" data-amount="{{ inv.total }}" class="bg-zinc-900">
+                                                #{{ inv.invoice_number }} - ₹{{ "%.2f"|format(inv.total) }} ({{ inv.issue_date.strftime('%d %b %Y') }})
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-zinc-300 mb-2">Second Invoice</label>
+                                        <select class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/[0.1] text-white rounded-lg focus:border-blue-500/50 focus:outline-none transition-all text-sm"
+                                                name="invoice_id_2" id="invoice_id_2" required>
+                                            <option value="" class="bg-zinc-900">Select invoice...</option>
+                                            {% for inv in data.invoices %}
+                                            <option value="{{ inv._id }}" data-amount="{{ inv.total }}" class="bg-zinc-900">
+                                                #{{ inv.invoice_number }} - ₹{{ "%.2f"|format(inv.total) }} ({{ inv.issue_date.strftime('%d %b %Y') }})
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-8">
+                            <svg class="w-12 h-12 text-zinc-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                            </svg>
+                            <p class="text-zinc-400 text-sm">No clients have multiple issued invoices to merge</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Merged Amount Section -->
+            <div class="relative bg-gradient-to-br from-emerald-500/5 via-emerald-500/5 to-transparent border border-emerald-500/20 rounded-2xl p-6 overflow-hidden group hover:border-emerald-500/40 transition-all">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-emerald-500/5 rounded-full -mr-20 -mt-20"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="p-2 bg-emerald-500/10 rounded-lg">
+                            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white">Merged Amount</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-zinc-300 mb-2">Calculated Amount</label>
+                            <div class="px-4 py-2.5 bg-white/[0.05] border border-white/[0.1] text-white rounded-lg text-sm">
+                                ₹<span id="calculatedAmount">0.00</span>
+                            </div>
+                            <small class="text-xs text-zinc-500 mt-1 block">Sum of both invoice amounts</small>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-zinc-300 mb-2">Custom Amount (Optional)</label>
+                            <input type="number" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/[0.1] text-white rounded-lg focus:border-emerald-500/50 focus:outline-none transition-all text-sm"
+                                   name="custom_amount" id="customAmount" placeholder="Leave empty to use calculated" step="0.01">
+                            <small class="text-xs text-zinc-500 mt-1 block">Override if needed</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coupon Section -->
+            <div class="relative bg-gradient-to-br from-amber-500/5 via-amber-500/5 to-transparent border border-amber-500/20 rounded-2xl p-6 overflow-hidden group hover:border-amber-500/40 transition-all">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-amber-500/5 rounded-full -mr-20 -mt-20"></div>
+                <div class="relative">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="p-2 bg-amber-500/10 rounded-lg">
+                            <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white">Apply Coupon (Optional)</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-zinc-300 mb-2">Coupon Code</label>
+                            <input type="text" class="w-full px-4 py-2.5 bg-white/[0.05] border border-white/[0.1] text-white rounded-lg focus:border-amber-500/50 focus:outline-none transition-all text-sm"
+                                   name="coupon_code" id="couponCode" placeholder="Enter coupon code" autocomplete="off">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" class="w-full px-4 py-2.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white rounded-lg font-medium text-sm transition-all"
+                                    id="validateCoupon">
+                                Validate
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="couponResult" style="display: none;" class="mb-4">
+                        <div class="px-4 py-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-lg text-sm">
+                            ✓ Discount Applied: <span id="discountInfo" class="font-semibold"></span>
+                        </div>
+                    </div>
+                    <div id="couponError" style="display: none;" class="mb-4">
+                        <div class="px-4 py-3 bg-red-500/10 border border-red-500/30 text-red-300 rounded-lg text-sm" id="couponErrorMsg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="flex-1 px-5 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-lg font-semibold shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    Merge Invoices
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Summary Sidebar -->
+    <div class="space-y-6">
+        <div class="relative bg-gradient-to-br from-white/[0.08] via-white/[0.04] to-transparent border border-white/[0.12] rounded-2xl p-6 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-primary-500/5 rounded-full -mr-16 -mt-16"></div>
+            <div class="relative">
+                <h4 class="text-lg font-semibold text-white mb-6">Summary</h4>
+                
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Invoice 1</p>
+                        <p class="text-2xl font-bold text-white">₹<span id="invoice1Amount">0.00</span></p>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <svg class="w-6 h-6 text-zinc-600 rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m0 0h6"/>
+                        </svg>
+                    </div>
+                    
+                    <div>
+                        <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Invoice 2</p>
+                        <p class="text-2xl font-bold text-white">₹<span id="invoice2Amount">0.00</span></p>
+                    </div>
+
+                    <div class="py-4 border-t border-white/[0.1] border-b">
+                        <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Merged Amount</p>
+                        <p class="text-xl font-bold text-white">₹<span id="mergedAmountSummary">0.00</span></p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Coupon Discount</p>
+                        <p class="text-lg font-semibold text-red-400">-₹<span id="couponDiscountSummary">0.00</span></p>
+                    </div>
+
+                    <div class="pt-4 border-t border-white/[0.1] bg-gradient-to-br from-primary-500/20 to-primary-600/10 rounded-lg p-4">
+                        <p class="text-xs font-bold text-primary-300 uppercase tracking-widest mb-2">Final Amount</p>
+                        <p class="text-3xl font-bold text-primary-300">₹<span id="finalAmountSummary">0.00</span></p>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-white/[0.1] space-y-2">
+                    <div class="flex items-start gap-2 text-xs text-zinc-400">
+                        <svg class="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Original invoices will be marked as PAID</span>
+                    </div>
+                    <div class="flex items-start gap-2 text-xs text-zinc-400">
+                        <svg class="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Coupon usage counter auto-increments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const invoice1Select = document.getElementById('invoice_id_1');
+    const invoice2Select = document.getElementById('invoice_id_2');
+    const customAmountInput = document.getElementById('customAmount');
+    const couponCodeInput = document.getElementById('couponCode');
+    const validateCouponBtn = document.getElementById('validateCoupon');
+    
+    // Update amounts when invoices are selected
+    function updateAmounts() {
+        const inv1Amount = parseFloat(invoice1Select.selectedOptions[0]?.dataset.amount || 0);
+        const inv2Amount = parseFloat(invoice2Select.selectedOptions[0]?.dataset.amount || 0);
+        const customAmount = parseFloat(customAmountInput.value) || null;
+        
+        document.getElementById('invoice1Amount').textContent = inv1Amount.toFixed(2);
+        document.getElementById('invoice2Amount').textContent = inv2Amount.toFixed(2);
+        
+        const calculatedAmount = inv1Amount + inv2Amount;
+        document.getElementById('calculatedAmount').textContent = calculatedAmount.toFixed(2);
+        
+        const mergedAmount = customAmount !== null ? customAmount : calculatedAmount;
+        document.getElementById('mergedAmountSummary').textContent = mergedAmount.toFixed(2);
+        
+        // Update final amount
+        const discountAmount = parseFloat(document.getElementById('couponDiscountSummary').textContent.replace('₹', '').replace(',', '')) || 0;
+        const finalAmount = Math.max(0, mergedAmount - discountAmount);
+        document.getElementById('finalAmountSummary').textContent = finalAmount.toFixed(2);
+    }
+    
+    invoice1Select.addEventListener('change', updateAmounts);
+    invoice2Select.addEventListener('change', updateAmounts);
+    customAmountInput.addEventListener('input', updateAmounts);
+    
+    // Validate coupon
+    validateCouponBtn.addEventListener('click', function() {
+        const couponCode = couponCodeInput.value.trim();
+        const mergedAmount = parseFloat(document.getElementById('mergedAmountSummary').textContent) || 0;
+        
+        if (!couponCode) {
+            document.getElementById('couponError').style.display = 'block';
+            document.getElementById('couponErrorMsg').textContent = '❌ Please enter a coupon code';
+            document.getElementById('couponResult').style.display = 'none';
+            return;
+        }
+        
+        // AJAX call to validate coupon
+        fetch('{{ url_for("invoices.validate_coupon") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                coupon_code: couponCode,
+                amount: mergedAmount
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                const discount = data.discount_amount;
+                const discountType = data.discount_type;
+                const discountValue = data.discount_value;
+                const finalAmount = data.final_amount;
+                
+                let discountLabel = '';
+                if (discountType === 'PERCENTAGE') {
+                    discountLabel = `${discountValue}% off (₹${discount.toFixed(2)})`;
+                } else {
+                    discountLabel = `₹${discountValue} off`;
+                }
+                
+                document.getElementById('discountInfo').textContent = discountLabel;
+                document.getElementById('couponResult').style.display = 'block';
+                document.getElementById('couponError').style.display = 'none';
+                
+                document.getElementById('couponDiscountSummary').textContent = discount.toFixed(2);
+                document.getElementById('finalAmountSummary').textContent = finalAmount.toFixed(2);
+            } else {
+                document.getElementById('couponErrorMsg').textContent = '❌ ' + (data.message || 'Invalid coupon');
+                document.getElementById('couponError').style.display = 'block';
+                document.getElementById('couponResult').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            document.getElementById('couponErrorMsg').textContent = '❌ Error validating coupon';
+            document.getElementById('couponError').style.display = 'block';
+            document.getElementById('couponResult').style.display = 'none';
+        });
+    });
+    
+    // Allow Enter key in coupon field
+    couponCodeInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            validateCouponBtn.click();
+        }
+    });
+    
+    // Validate on form submit
+    document.getElementById('mergeForm').addEventListener('submit', function(e) {
+        const inv1 = invoice1Select.value;
+        const inv2 = invoice2Select.value;
+        
+        if (!inv1 || !inv2) {
+            e.preventDefault();
+            alert('Please select two invoices');
+            return;
+        }
+        
+        if (inv1 === inv2) {
+            e.preventDefault();
+            alert('Please select two different invoices');
+            return;
+        }
+    });
+});
+</script>
+{% endblock %}

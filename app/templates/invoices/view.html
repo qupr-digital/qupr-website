@@ -135,12 +135,14 @@
                     <tbody class="divide-y divide-white/[0.04]">
                         {% for item in invoice['items'] %}
                         <tr class="hover:bg-white/[0.02] transition-colors">
-                            <td class="py-4 px-6 font-medium">{{ item.name }}</td>
-                            <td class="py-4 px-6 font-mono text-sm text-zinc-400">{{ item.hsn }}</td>
-                            <td class="py-4 px-6 text-right">₹{{ "%.2f"|format(item.rate) }}</td>
+                            <td class="py-4 px-6 font-medium">
+                                {% if item.get('name') %}{{ item.name }}{% else %}{{ item.get('description', 'Item') }}{% endif %}
+                            </td>
+                            <td class="py-4 px-6 font-mono text-sm text-zinc-400">{{ item.get('hsn', '-') }}</td>
+                            <td class="py-4 px-6 text-right">₹{{ "%.2f"|format(item.get('rate') or item.get('unit_price', 0)) }}</td>
                             <td class="py-4 px-6 text-center">{{ item.quantity }}</td>
-                            <td class="py-4 px-6 text-center"><span class="px-2 py-1 bg-primary-500/20 text-primary-300 rounded text-xs font-medium">{{ item.tax_rate }}%</span></td>
-                            <td class="py-4 px-6 text-right font-semibold">₹{{ "%.2f"|format(item.rate * item.quantity) }}</td>
+                            <td class="py-4 px-6 text-center"><span class="px-2 py-1 bg-primary-500/20 text-primary-300 rounded text-xs font-medium">{{ item.get('tax_rate', 0) }}%</span></td>
+                            <td class="py-4 px-6 text-right font-semibold">₹{{ "%.2f"|format(item.get('amount') or (item.get('rate') or item.get('unit_price', 0)) * item.quantity) }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -157,14 +159,22 @@
             <div class="space-y-3 pb-4 border-b border-white/[0.06]">
                 <div class="flex justify-between">
                     <span class="text-zinc-400">Subtotal</span>
-                    <span class="font-medium">₹{{ "%.2f"|format(invoice.subtotal) }}</span>
+                    <span class="font-medium">₹{{ "%.2f"|format(invoice.get('subtotal', invoice.get('total', 0))) }}</span>
                 </div>
-                {% for tax_rate, tax_amount in invoice['tax_breakup'].items() %}
-                <div class="flex justify-between">
-                    <span class="text-zinc-400">Tax ({{ tax_rate }}%)</span>
-                    <span class="font-medium">₹{{ "%.2f"|format(tax_amount) }}</span>
+                {% if invoice.get('tax_breakup') %}
+                    {% for tax_rate, tax_amount in invoice['tax_breakup'].items() %}
+                    <div class="flex justify-between">
+                        <span class="text-zinc-400">Tax ({{ tax_rate }}%)</span>
+                        <span class="font-medium">₹{{ "%.2f"|format(tax_amount) }}</span>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                {% if invoice.get('coupon_applied') %}
+                <div class="flex justify-between text-red-400">
+                    <span>Coupon Discount ({{ invoice.get('coupon_applied') }})</span>
+                    <span class="font-medium">-₹{{ "%.2f"|format(invoice.get('coupon_discount', 0)) }}</span>
                 </div>
-                {% endfor %}
+                {% endif %}
             </div>
             <div class="flex justify-between pt-4 mb-6">
                 <span class="text-lg font-semibold">Total</span>

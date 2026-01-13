@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Coupon - QuprBilling{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-20 pb-12">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Edit Coupon</h1>
+            <p class="text-slate-400">Update coupon details for code: <span class="text-blue-400 font-semibold">{{ coupon.code }}</span></p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-6 p-4 rounded-lg {% if category == 'error' %}bg-red-500/10 border border-red-500/30 text-red-400{% else %}bg-green-500/10 border border-green-500/30 text-green-400{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Form Card -->
+        <div class="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl p-8">
+            <!-- Info Box -->
+            <div class="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                <p class="text-sm text-blue-400">
+                    <strong>Note:</strong> The coupon code cannot be changed. If you need a different code, create a new coupon.
+                </p>
+            </div>
+
+            <form method="POST" class="space-y-6">
+                <!-- Code (Read-only) -->
+                <div>
+                    <label for="code" class="block text-sm font-semibold text-white mb-2">
+                        Coupon Code
+                    </label>
+                    <input type="text" id="code" value="{{ coupon.code }}" disabled
+                           class="w-full px-4 py-3 bg-slate-700/30 border border-slate-600 rounded-lg text-slate-400 
+                                  cursor-not-allowed">
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="description" class="block text-sm font-semibold text-white mb-2">
+                        Description <span class="text-red-400">*</span>
+                    </label>
+                    <input type="text" id="description" name="description" required
+                           value="{{ coupon.description }}"
+                           class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                  placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <!-- Discount Type and Value -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label for="discount_type" class="block text-sm font-semibold text-white mb-2">
+                            Discount Type <span class="text-red-400">*</span>
+                        </label>
+                        <select id="discount_type" name="discount_type" required
+                                class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                       focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <option value="PERCENTAGE" {% if coupon.discount_type == 'PERCENTAGE' %}selected{% endif %}>Percentage (%)</option>
+                            <option value="FIXED" {% if coupon.discount_type == 'FIXED' %}selected{% endif %}>Fixed Amount (₹)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="discount_value" class="block text-sm font-semibold text-white mb-2">
+                            Discount Value <span class="text-red-400">*</span>
+                        </label>
+                        <input type="number" id="discount_value" name="discount_value" required
+                               value="{{ coupon.discount_value }}" min="0" step="0.01"
+                               class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                      placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <p class="text-xs text-slate-400 mt-1">
+                            <span id="valueUnit">
+                                {% if coupon.discount_type == 'PERCENTAGE' %}Max: 100%{% else %}Amount in rupees{% endif %}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Minimum Amount -->
+                <div>
+                    <label for="min_amount" class="block text-sm font-semibold text-white mb-2">
+                        Minimum Purchase Amount (Optional)
+                    </label>
+                    <input type="number" id="min_amount" name="min_amount"
+                           value="{% if coupon.min_amount %}{{ coupon.min_amount }}{% endif %}"
+                           min="0" step="0.01"
+                           class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                  placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+
+                <!-- Max Uses -->
+                <div>
+                    <label for="max_uses" class="block text-sm font-semibold text-white mb-2">
+                        Maximum Uses (Optional)
+                    </label>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+                            <div>
+                                <p class="text-sm text-slate-400">Currently used: <span class="text-white font-semibold">{{ coupon.times_used }}</span></p>
+                                {% if coupon.max_uses %}
+                                    <p class="text-sm text-slate-400">Max uses: <span class="text-white font-semibold">{{ coupon.max_uses }}</span></p>
+                                {% else %}
+                                    <p class="text-sm text-slate-400">Unlimited</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <input type="number" id="max_uses" name="max_uses"
+                               value="{% if coupon.max_uses %}{{ coupon.max_uses }}{% endif %}"
+                               min="0"
+                               class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                      placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <p class="text-xs text-slate-400">Leave empty for unlimited uses</p>
+                    </div>
+                </div>
+
+                <!-- Valid Period -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label for="valid_from" class="block text-sm font-semibold text-white mb-2">
+                            Valid From (Optional)
+                        </label>
+                        <input type="datetime-local" id="valid_from" name="valid_from"
+                               value="{% if coupon.valid_from %}{{ coupon.valid_from.strftime('%Y-%m-%dT%H:%M') }}{% endif %}"
+                               class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                      focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="valid_until" class="block text-sm font-semibold text-white mb-2">
+                            Valid Until (Optional)
+                        </label>
+                        <input type="datetime-local" id="valid_until" name="valid_until"
+                               value="{% if coupon.valid_until %}{{ coupon.valid_until.strftime('%Y-%m-%dT%H:%M') }}{% endif %}"
+                               class="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                      focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <!-- Active Status -->
+                <div class="p-4 bg-slate-700/30 rounded-lg">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" name="is_active" {% if coupon.is_active %}checked{% endif %}
+                               class="w-5 h-5 text-blue-500 rounded focus:ring-2 focus:ring-blue-500">
+                        <span class="ml-3 text-white font-medium">Coupon is active</span>
+                    </label>
+                    <p class="text-xs text-slate-400 mt-2">Inactive coupons cannot be used by clients</p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-4 pt-6 border-t border-slate-700">
+                    <button type="submit" 
+                            class="flex-1 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 
+                                   hover:to-blue-700 text-white font-bold rounded-lg transition transform hover:scale-105">
+                        Update Coupon
+                    </button>
+                    <a href="{{ url_for('dashboard.list_coupons') }}" 
+                       class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg 
+                              transition text-center">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update discount value placeholder based on type
+document.getElementById('discount_type').addEventListener('change', function() {
+    const valueInput = document.getElementById('discount_value');
+    const valueUnit = document.getElementById('valueUnit');
+    
+    if (this.value === 'PERCENTAGE') {
+        valueInput.max = '100';
+        valueUnit.textContent = 'Max: 100%';
+    } else {
+        valueInput.removeAttribute('max');
+        valueUnit.textContent = 'Amount in rupees';
+    }
+});
+</script>
+{% endblock %}

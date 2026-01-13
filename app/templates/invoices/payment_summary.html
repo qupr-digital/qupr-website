@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Summary - QuprBilling{% endblock %}
+
+{% block content %}
+<div class="min-h-screen pt-20 pb-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Payment Summary</h1>
+            <p class="text-slate-400">Review your pending invoices and select what to pay</p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Invoices Section -->
+            <div class="lg:col-span-2">
+                <div class="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl p-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">Pending Invoices</h2>
+
+                    {% if invoices %}
+                        <form id="paymentForm">
+                            <!-- Payment Type Selection -->
+                            <div class="mb-6 p-4 bg-slate-700/30 rounded-lg">
+                                <label class="flex items-center cursor-pointer mb-3">
+                                    <input type="radio" name="payment_type" value="total" checked 
+                                           class="w-4 h-4 text-blue-500 rounded focus:ring-2 focus:ring-blue-500"
+                                           onchange="updatePaymentType()">
+                                    <span class="ml-3 text-white font-medium">Pay Total Amount</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" name="payment_type" value="selected"
+                                           class="w-4 h-4 text-blue-500 rounded focus:ring-2 focus:ring-blue-500"
+                                           onchange="updatePaymentType()">
+                                    <span class="ml-3 text-white font-medium">Pay Selected Invoices</span>
+                                </label>
+                            </div>
+
+                            <!-- Invoices List -->
+                            <div id="invoicesContainer" class="space-y-3">
+                                {% for invoice in invoices %}
+                                <div class="invoice-card p-4 bg-slate-700/40 hover:bg-slate-700/60 rounded-lg border border-slate-600/30 transition-all">
+                                    <div class="flex items-start gap-4">
+                                        <!-- Checkbox -->
+                                        <input type="checkbox" class="invoice-checkbox mt-1 w-5 h-5 text-blue-500 rounded 
+                                                                        focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                                               value="{{ invoice._id }}"
+                                               data-amount="{{ invoice.total }}"
+                                               onchange="updateCalculations()">
+                                        
+                                        <!-- Invoice Details -->
+                                        <div class="flex-grow min-w-0">
+                                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                                <div>
+                                                    <h3 class="text-white font-semibold">Invoice #{{ invoice.invoice_number }}</h3>
+                                                    <p class="text-sm text-slate-400">
+                                                        {% if invoice.client %}
+                                                            Client: <span class="text-blue-400">{{ invoice.client.company_name }}</span>
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <p class="text-white font-bold">₹{{ "%.2f"|format(invoice.total) }}</p>
+                                                    <p class="text-xs text-slate-400">{{ invoice.created_at.strftime('%d %b %Y') }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Total Amount Display -->
+                            <div class="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-slate-400">Total Pending:</span>
+                                    <span class="text-xl font-bold text-white">₹<span id="totalAmount">{{ "%.2f"|format(total_amount) }}</span></span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-slate-400">Selected:</span>
+                                    <span class="text-white font-semibold">₹<span id="selectedAmount">{{ "%.2f"|format(total_amount) }}</span></span>
+                                </div>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center py-12">
+                            <p class="text-slate-400 text-lg mb-4">No pending invoices</p>
+                            <a href="{{ url_for('invoices.list_invoices') }}" class="inline-block px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                                View All Invoices
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Payment Details Sidebar -->
+            {% if invoices %}
+            <div>
+                <div class="bg-slate-800/50 backdrop-blur border border-slate-700/50 rounded-xl p-6 sticky top-24">
+                    <h2 class="text-xl font-semibold text-white mb-6">Order Summary</h2>
+
+                    <!-- Coupon Code Section -->
+                    <div class="mb-6">
+                        <label for="couponCode" class="block text-sm font-medium text-slate-300 mb-2">
+                            Coupon Code (Optional)
+                        </label>
+                        <div class="flex gap-2">
+                            <input type="text" id="couponCode" placeholder="Enter coupon code"
+                                   class="flex-grow px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white 
+                                          placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <button type="button" onclick="validateCoupon()"
+                                    class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 
+                                           hover:to-blue-700 text-white font-medium rounded-lg transition">
+                                Apply
+                            </button>
+                        </div>
+                        <p id="couponStatus" class="text-sm mt-2"></p>
+                    </div>
+
+                    <!-- Breakdown -->
+                    <div class="space-y-3 mb-6 pb-6 border-b border-slate-700">
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Subtotal</span>
+                            <span class="text-white font-medium">₹<span id="subtotal">{{ "%.2f"|format(total_amount) }}</span></span>
+                        </div>
+                        <div class="flex justify-between" id="discountRow" style="display: none;">
+                            <div>
+                                <span class="text-slate-400">Discount</span>
+                                <p class="text-xs text-blue-400" id="discountLabel"></p>
+                            </div>
+                            <span class="text-green-400 font-medium">-₹<span id="discountAmount">0.00</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="mb-8 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-300 font-medium">Total Amount</span>
+                            <span class="text-2xl font-bold text-white">₹<span id="finalAmount">{{ "%.2f"|format(total_amount) }}</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Hidden form for submission -->
+                    <input type="hidden" id="appliedCoupon" value="">
+                    <input type="hidden" id="appliedDiscount" value="0">
+                    <input type="hidden" id="discountType" value="">
+
+                    <!-- Payment Button -->
+                    <button id="payButton" onclick="processPayment()" 
+                            class="w-full py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 
+                                   hover:to-green-700 text-white font-bold rounded-lg transition transform hover:scale-105">
+                        Proceed to Payment
+                    </button>
+
+                    <!-- Payment Options Info -->
+                    <div class="mt-6 p-4 bg-slate-700/30 rounded-lg text-sm">
+                        <p class="text-slate-400 mb-2">💳 <strong>Payment Method:</strong></p>
+                        <ul class="text-slate-400 space-y-1 ml-6">
+                            <li>• UPI (Fast & Secure)</li>
+                            <li>• Bank Transfer</li>
+                            <li>• Card Payment</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+let couponData = null;
+const totalAmount = {{ total_amount|tojson }};
+
+function updatePaymentType() {
+    const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+    const checkboxes = document.querySelectorAll('.invoice-checkbox');
+    
+    if (paymentType === 'total') {
+        checkboxes.forEach(cb => cb.checked = false);
+        checkboxes.forEach(cb => cb.disabled = true);
+    } else {
+        checkboxes.forEach(cb => cb.disabled = false);
+    }
+    
+    updateCalculations();
+}
+
+function updateCalculations() {
+    const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+    let selectedAmount = 0;
+
+    if (paymentType === 'total') {
+        selectedAmount = totalAmount;
+    } else {
+        document.querySelectorAll('.invoice-checkbox:checked').forEach(cb => {
+            selectedAmount += parseFloat(cb.dataset.amount);
+        });
+    }
+
+    document.getElementById('selectedAmount').textContent = selectedAmount.toFixed(2);
+    document.getElementById('subtotal').textContent = selectedAmount.toFixed(2);
+
+    // Recalculate discount if coupon applied
+    if (couponData) {
+        const newDiscount = (selectedAmount * couponData.discount_percentage) / 100;
+        const finalAmount = Math.max(0, selectedAmount - newDiscount);
+        document.getElementById('discountAmount').textContent = newDiscount.toFixed(2);
+        document.getElementById('finalAmount').textContent = finalAmount.toFixed(2);
+    } else {
+        document.getElementById('finalAmount').textContent = selectedAmount.toFixed(2);
+    }
+}
+
+function validateCoupon() {
+    const couponCode = document.getElementById('couponCode').value.trim();
+    const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+    let amount = parseFloat(document.getElementById('selectedAmount').textContent);
+
+    if (!couponCode) {
+        document.getElementById('couponStatus').innerHTML = '<span class="text-red-400">Please enter a coupon code</span>';
+        return;
+    }
+
+    document.getElementById('couponStatus').innerHTML = '<span class="text-slate-400">Validating...</span>';
+
+    fetch('{{ url_for("invoices.validate_coupon") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            coupon_code: couponCode,
+            amount: amount
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.valid) {
+            couponData = data;
+            document.getElementById('appliedCoupon').value = couponCode;
+            document.getElementById('appliedDiscount').value = data.discount_amount;
+            document.getElementById('discountType').value = data.discount_type;
+            
+            // Show discount details
+            const discountLabel = data.discount_type === 'PERCENTAGE' 
+                ? `${data.discount_value}% off`
+                : `Flat ₹${data.discount_amount.toFixed(2)}`;
+            
+            document.getElementById('discountLabel').textContent = discountLabel;
+            document.getElementById('discountRow').style.display = 'flex';
+            document.getElementById('discountAmount').textContent = data.discount_amount.toFixed(2);
+            document.getElementById('finalAmount').textContent = data.final_amount.toFixed(2);
+            
+            document.getElementById('couponStatus').innerHTML = '<span class="text-green-400">✓ Coupon applied successfully!</span>';
+        } else {
+            couponData = null;
+            document.getElementById('appliedCoupon').value = '';
+            document.getElementById('appliedDiscount').value = '0';
+            document.getElementById('discountRow').style.display = 'none';
+            document.getElementById('finalAmount').textContent = amount.toFixed(2);
+            document.getElementById('couponStatus').innerHTML = `<span class="text-red-400">✗ ${data.message}</span>`;
+        }
+    })
+    .catch(error => {
+        document.getElementById('couponStatus').innerHTML = '<span class="text-red-400">Error validating coupon. Please try again.</span>';
+        console.error('Error:', error);
+    });
+}
+
+function updatePaymentType() {
+    const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+    const checkboxes = document.querySelectorAll('.invoice-checkbox');
+    
+    if (paymentType === 'total') {
+        checkboxes.forEach(cb => cb.checked = false);
+        checkboxes.forEach(cb => cb.disabled = true);
+    } else {
+        checkboxes.forEach(cb => cb.disabled = false);
+    }
+    
+    updateCalculations();
+}
+
+function processPayment() {
+    const paymentType = document.querySelector('input[name="payment_type"]:checked').value;
+    const finalAmount = parseFloat(document.getElementById('finalAmount').textContent);
+
+    if (finalAmount <= 0) {
+        alert('Invalid payment amount');
+        return;
+    }
+
+    let selectedInvoiceIds = [];
+    if (paymentType === 'selected') {
+        const checkboxes = document.querySelectorAll('.invoice-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('Please select at least one invoice to pay');
+            return;
+        }
+        selectedInvoiceIds = Array.from(checkboxes).map(cb => cb.value);
+    }
+
+    // Show loading state
+    const payButton = document.getElementById('payButton');
+    payButton.disabled = true;
+    payButton.innerHTML = 'Processing...';
+
+    fetch('{{ url_for("invoices.process_payment") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            payment_type: paymentType,
+            invoice_ids: selectedInvoiceIds,
+            coupon_code: document.getElementById('appliedCoupon').value || null,
+            amount: finalAmount
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Redirect to payment confirmation page
+            window.location.href = data.redirect_url;
+        } else {
+            alert('Error: ' + data.error);
+            payButton.disabled = false;
+            payButton.innerHTML = 'Proceed to Payment';
+        }
+    })
+    .catch(error => {
+        alert('Error processing payment: ' + error);
+        console.error('Error:', error);
+        payButton.disabled = false;
+        payButton.innerHTML = 'Proceed to Payment';
+    });
+}
+
+// Initialize with total payment type
+updatePaymentType();
+</script>
+{% endblock %}

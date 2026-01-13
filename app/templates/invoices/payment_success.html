@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Successful - QuprBilling{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pt-20 pb-12 flex items-center justify-center">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <!-- Success Animation -->
+        <div class="text-center mb-12">
+            <div class="inline-block p-4 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-full mb-8 animate-pulse">
+                <svg class="w-16 h-16 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+
+            <h1 class="text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-2">
+                Payment Successful!
+            </h1>
+            <p class="text-xl text-slate-300 mb-2">Thank you for your payment</p>
+            <p class="text-slate-400">Your invoices have been marked as paid</p>
+        </div>
+
+        <!-- Success Card -->
+        <div class="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-2xl p-10 mb-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Amount -->
+                <div class="border-r border-green-500/20 pr-8">
+                    <p class="text-slate-400 text-sm mb-2">Total Paid</p>
+                    <p class="text-4xl font-bold text-green-400 mb-6">₹{{ "%.2f"|format(payment.final_amount) }}</p>
+                    {% if payment.discount > 0 %}
+                    <div class="bg-green-500/20 rounded-lg p-3">
+                        <p class="text-xs text-slate-400 mb-1">You saved with coupon</p>
+                        <p class="text-lg font-semibold text-green-300">₹{{ "%.2f"|format(payment.discount) }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Details -->
+                <div>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-slate-400 text-sm">Invoices Paid</p>
+                            <p class="text-2xl font-bold text-white">{{ payment.invoice_count }}</p>
+                        </div>
+                        {% if payment.coupon_code %}
+                        <div>
+                            <p class="text-slate-400 text-sm">Coupon Applied</p>
+                            <p class="text-xl font-bold text-green-400">{{ payment.coupon_code }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- What Happens Next -->
+        <div class="bg-slate-800/50 border border-slate-700/50 rounded-xl p-6 mb-8">
+            <h2 class="text-lg font-semibold text-white mb-4">What Happens Next?</h2>
+            <ol class="space-y-3 text-slate-300">
+                <li class="flex items-start gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/30 flex items-center justify-center text-green-400 text-sm font-bold">✓</span>
+                    <span>Your payment has been recorded in our system</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/30 flex items-center justify-center text-green-400 text-sm font-bold">✓</span>
+                    <span>You'll receive a payment confirmation email shortly</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/30 flex items-center justify-center text-green-400 text-sm font-bold">✓</span>
+                    <span>Your invoices will be updated as "Paid" in your dashboard</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-600/30 flex items-center justify-center text-slate-400 text-sm font-bold">!</span>
+                    <span>For bank transfers, settlement may take 1-2 business days</span>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="grid md:grid-cols-3 gap-4 mb-8">
+            <!-- Download Invoice -->
+            <a href="{{ url_for('invoices.list_invoices') }}" class="p-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg text-center transition">
+                <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-white mb-1">View Invoices</h3>
+                <p class="text-xs text-slate-400">Check payment status</p>
+            </a>
+
+            <!-- Download Receipt -->
+            <button onclick="window.print()" class="p-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50 rounded-lg text-center transition">
+                <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2m0 0v-8m0 8l-6-4m6 4l6-4"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-white mb-1">Print Receipt</h3>
+                <p class="text-xs text-slate-400">Save for records</p>
+            </button>
+
+            <!-- Go to Dashboard -->
+            <a href="{{ url_for('dashboard.render_client_dashboard') }}" class="p-4 bg-gradient-to-br from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 border border-blue-500/30 rounded-lg text-center transition">
+                <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-white mb-1">Go to Dashboard</h3>
+                <p class="text-xs text-slate-400">View all your invoices</p>
+            </a>
+        </div>
+
+        <!-- Receipt Summary (for printing) -->
+        <div class="print-only bg-white text-gray-900 p-8 rounded-lg mt-8">
+            <h1 class="text-3xl font-bold mb-8">PAYMENT RECEIPT</h1>
+
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase mb-2">Payment From</h3>
+                    <p class="font-semibold">{{ payment.client_name }}</p>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-gray-500 uppercase mb-2">Reference</h3>
+                    <p class="font-mono text-sm">{{ payment.client_id[-8:].upper() }}</p>
+                </div>
+            </div>
+
+            <table class="w-full mb-8">
+                <thead>
+                    <tr class="border-b-2 border-gray-900">
+                        <th class="text-left text-xs font-bold text-gray-500 uppercase pb-2">Description</th>
+                        <th class="text-right text-xs font-bold text-gray-500 uppercase pb-2">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-gray-300">
+                        <td class="py-3">Invoices ({{ payment.invoice_count }})</td>
+                        <td class="text-right">₹{{ "%.2f"|format(payment.subtotal) }}</td>
+                    </tr>
+                    {% if payment.discount > 0 %}
+                    <tr class="border-b border-gray-300 text-green-700">
+                        <td class="py-3">Discount ({{ payment.coupon_code }})</td>
+                        <td class="text-right">-₹{{ "%.2f"|format(payment.discount) }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr class="border-b-2 border-gray-900">
+                        <td class="py-3 font-bold">Total Amount Paid</td>
+                        <td class="text-right font-bold">₹{{ "%.2f"|format(payment.final_amount) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="text-xs text-gray-500 mb-4">Generated on {{ now().strftime('%d %b %Y at %H:%M:%S') }}</p>
+            <p class="text-xs text-gray-500">Thank you for your business!</p>
+        </div>
+
+        <!-- Thank You Message -->
+        <div class="text-center text-slate-400">
+            <p class="mb-2">Need help? Contact our support team</p>
+            <p class="text-sm">We're here to assist you 24/7</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        body {
+            background: white;
+        }
+        .print-only {
+            display: block !important;
+        }
+        * {
+            display: none !important;
+        }
+        .print-only,
+        .print-only * {
+            display: block !important;
+        }
+    }
+    
+    .print-only {
+        display: none;
+    }
+</style>
+
+{% endblock %}
