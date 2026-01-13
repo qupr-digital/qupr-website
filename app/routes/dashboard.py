@@ -41,6 +41,14 @@ def render_owner_dashboard(user):
     revenue_result = list(db.invoices.aggregate(pipeline))
     total_revenue = revenue_result[0]['total'] if revenue_result else 0
     
+    # Calculate pending amount (issued invoices)
+    pending_pipeline = [
+        {'$match': {'status': Invoice.STATUS_ISSUED}},
+        {'$group': {'_id': None, 'total': {'$sum': '$total'}}}
+    ]
+    pending_result = list(db.invoices.aggregate(pending_pipeline))
+    pending_amount = pending_result[0]['total'] if pending_result else 0
+    
     return render_template('dashboard/owner.html',
                          total_clients=total_clients,
                          total_products=total_products,
@@ -49,6 +57,7 @@ def render_owner_dashboard(user):
                          issued_invoices=issued_invoices,
                          paid_invoices=paid_invoices,
                          total_revenue=total_revenue,
+                         pending_amount=pending_amount,
                          recent_invoices=recent_invoices)
 
 
