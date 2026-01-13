@@ -47,6 +47,12 @@ class User:
         return db.users.find_one({'email': email.lower()})
     
     @staticmethod
+    def get_by_client_id(client_id):
+        """Get user by client ID"""
+        db = get_db()
+        return db.users.find_one({'client_id': ObjectId(client_id)})
+    
+    @staticmethod
     def verify_password(user, password):
         """Verify user password"""
         if not user or not password:

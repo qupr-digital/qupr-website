@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
-from app.utils.auth import owner_required
+from app.utils.auth import owner_required, get_current_user
 from app.models.client import Client
 from app.services.client_service import ClientService
+from app.models.magic_link import MagicLink
 
 clients_bp = Blueprint('clients', __name__)
 
@@ -162,3 +163,47 @@ def deactivate_client(client_id):
     except Exception as e:
         flash(f'Error deactivating client: {str(e)}', 'error')
         return redirect(url_for('clients.view_client', client_id=client_id))
+
+
+@clients_bp.route('/<client_id>/generate-magic-link', methods=['POST'])
+@owner_required
+def generate_magic_link(client_id):
+    """Generate a magic login link for a client"""
+    try:
+        client = Client.get_by_id(client_id)
+        if not client:
+            flash('Client not found', 'error')
+            return redirect(url_for('clients.list_clients'))
+        
+        # Check if client has a user account
+        user = ClientService.get_client_user(client_id)
+        if not user:
+            flash('This client does not have a user account', 'error')
+            return redirect(url_for('clients.view_client', client_id=client_id))
+        
+        # Get expiry hours from form (default 24)
+        expires_in_hours = int(request.form.get('expires_in_hours', 24))
+        
+        # Get current user (owner) who is generating the link
+        current_user = get_current_user()
+        
+        # Create magic link
+        magic_link = MagicLink.create(
+            client_id=client_id,
+            expires_in_hours=expires_in_hours,
+            created_by=str(current_user['_id'])
+        )
+        
+        # Build the full URL
+        magic_url = url_for('auth.magic_login', token=magic_link['token'], _external=True)
+        
+        # Return to a page showing the magic link
+        return render_template('clients/magic_link.html',
+                             client=client,
+                             magic_url=magic_url,
+                             expires_at=magic_link['expires_at'])
+        
+    except Exception as e:
+        flash(f'Error generating magic link: {str(e)}', 'error')
+        return redirect(url_for('clients.view_client', client_id=client_id))
+
