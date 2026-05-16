@@ -1,558 +1,490 @@
 {% extends "base.html" %}
 
-{% block title %}Qupr Digital - Modern Invoice & Business Management{% endblock %}
+{% block title %}QDIT - IT Consulting & Development Company{% endblock %}
+
+{% block extra_css %}
+
+<!-- AOS -->
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+<!-- Swiper -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<style>
+
+    .hero-grid {
+        background-image:
+            linear-gradient(to right, rgba(99,102,241,0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(99,102,241,0.08) 1px, transparent 1px);
+        background-size: 60px 60px;
+    }
+
+    .glass-card {
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .gradient-border {
+        position: relative;
+    }
+
+    .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        padding: 1px;
+        border-radius: inherit;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+
+    .floating-orb {
+        animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+        0%,100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+
+    }
+
+    .swiper-pagination-bullet-active {
+        background: #4f46e5 !important;
+    }
+
+</style>
+
+{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="relative py-20 lg:py-32 -mt-8">
-    <div class="absolute inset-0"></div>
-    <div class="relative text-center max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-sm text-zinc-400 mb-8 hover:bg-white/[0.06] hover:border-emerald-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Trusted by 50+ businesses
-        </div>
-        <h1 class="text-5xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span class="bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">
-                Fast, Simple, Scalable
-            </span>
-            <br>
-            <span class="bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
-                Digital Products
-            </span>
-        </h1>
-        <p class="text-xl text-zinc-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Built for startups, small teams, and growing businesses. We ship reliable web & app experiences backed by modern, scalable infrastructure.
-        </p>
-        <div class="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
-            <a href="{{ url_for('public.contact') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold shadow-2xl shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-1" aria-label="Get a free quote">
-                Get a Free Quote
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-            </a>
-            <a href="mailto:{{ config.COMPANY_EMAIL }}?subject=Book%20a%20Call&body=Hi%20Qupr%20Digital%2C%20I'd%20like%20to%20book%20a%20call." class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-zinc-900 hover:bg-zinc-100 border border-white/[0.08] hover:border-white/[0.15] rounded-xl font-semibold transition-all" aria-label="Book a call">
-                Book a Call
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"/></svg>
-            </a>
-        </div>
-    </div>
-</section>
 
-<!-- Features Grid -->
-<section class="py-20">
-    <div class="grid md:grid-cols-3 gap-6">
-        <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-primary-500/30 rounded-2xl p-8 transition-all">
-            <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="relative">
-                <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center mb-6">
-                    <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                </div>
-                <h3 class="text-xl font-semibold mb-3">Operational Transparency</h3>
-                <p class="text-zinc-400 leading-relaxed">
-                    Clear, well-structured billing with accurate tax breakdowns,
-                    reflecting our commitment to transparent and reliable operations.
-                </p>
+<!-- HERO -->
+<section class="relative overflow-hidden min-h-screen flex items-center hero-grid">
+
+    <!-- Background -->
+    <div class="absolute top-20 left-20 w-72 h-72 bg-indigo-200 rounded-full blur-3xl opacity-30 floating-orb"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200 rounded-full blur-3xl opacity-30 floating-orb"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 py-24">
+
+        <div class="max-w-4xl">
+
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-medium mb-10">
+
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+
+                IT Consulting & Development Company
+
             </div>
-        </div>
 
-        <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-blue-500/30 rounded-2xl p-8 transition-all">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="relative">
-                <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6">
-                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                </div>
-                <h3 class="text-xl font-semibold mb-3">Client Access</h3>
-                <p class="text-zinc-400 leading-relaxed">
-                    Clients receive secure access to their billing and documents,
-                    reinforcing transparency and long-term trust.
-                </p>
+            <!-- Heading -->
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.02] text-zinc-900 max-w-5xl">
+
+                Building
+                <span class="bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 bg-clip-text text-transparent">
+                    software,
+                </span>
+
+                systems, and digital experiences for modern businesses.
+
+            </h1>
+
+            <!-- Description -->
+            <p class="mt-8 text-xl text-zinc-600 leading-relaxed max-w-3xl">
+
+                QDIT helps startups, businesses, and organizations
+                build scalable software, AI-powered tools,
+                cloud systems, automation workflows,
+                and business platforms.
+
+            </p>
+
+            <!-- Buttons -->
+            <div class="mt-12 flex flex-col sm:flex-row gap-4">
+
+                <a href="{{ url_for('public.contact') }}"
+                   class="px-8 py-4 rounded-2xl bg-zinc-900 text-white font-semibold hover:bg-zinc-800 transition shadow-2xl shadow-zinc-200 text-center">
+
+                    Start a Project
+
+                </a>
+
+                <a href="#services"
+                   class="px-8 py-4 rounded-2xl border border-zinc-300 hover:bg-zinc-100 transition font-semibold text-center">
+
+                    Explore Services
+
+                </a>
+
             </div>
-        </div>
 
-        <div class="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-emerald-500/30 rounded-2xl p-8 transition-all">
-            <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="relative">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6">
-                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                </div>
-                <h3 class="text-xl font-semibold mb-3">Scalable Infrastructure</h3>
-                <p class="text-zinc-400 leading-relaxed">
-                    Our systems are designed to scale reliably,
-                    supporting growing applications and long-term business needs.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
+            <!-- Bottom Info -->
+            <div class="mt-16 flex flex-wrap gap-x-10 gap-y-5 text-sm text-zinc-500">
 
-<!-- Services Section -->
-<section id="services" class="py-20">
-    <div class="text-center mb-10">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-3">Services</h2>
-        <p class="text-zinc-400 text-lg max-w-2xl mx-auto">Outcome-focused, end-to-end delivery — from idea to scale.</p>
-        <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center"></div>
-    </div>
-    
-    <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl p-8 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-violet-500/5 flex items-center justify-center mb-6">
-                <svg class="w-7 h-7 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">Hosting Services</h3>
-            <p class="text-zinc-400 leading-relaxed">Scale without stress: fast, secure cloud hosting with 99.9% uptime.</p>
-        </div>
-
-        <div class="bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl p-8 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 flex items-center justify-center mb-6">
-                <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">App Development</h3>
-            <p class="text-zinc-400 leading-relaxed">Launch faster: high-quality mobile & web apps focused on outcomes.</p>
-        </div>
-
-        <div class="bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl p-8 transition-all">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500/20 to-rose-500/5 flex items-center justify-center mb-6">
-                <svg class="w-7 h-7 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">Web Development</h3>
-            <p class="text-zinc-400 leading-relaxed">Convert better: fast, SEO-friendly sites that look great and sell.</p>
-        </div>
-    </div>
-</section>
-
-<!--
-<section id="building" class="py-20">
-    <div class="text-center mb-10">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-3">What We're Building</h2>
-        <p class="text-zinc-400 text-lg max-w-2xl mx-auto">A focused roadmap to help small teams run better.</p>
-    </div>
-    <div class="max-w-5xl mx-auto">
-        <div class="rounded-3xl border border-white/[0.06] bg-white/[0.02] p-8">
-            <div class="flex items-center justify-between gap-4 mb-3">
                 <div class="flex items-center gap-3">
-                    <h3 class="text-2xl font-semibold">QuprCRM</h3>
-                    <span class="px-2.5 py-1 rounded-full text-xs bg-zinc-900 text-zinc-300 border border-white/[0.08]">In Development</span>
-                </div>
-                <span class="text-xs px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] text-zinc-400">Early access coming soon</span>
-            </div>
-            <p class="text-zinc-300 leading-relaxed">A lightweight CRM for startups and small teams — focused on simplicity and fast setup.</p>
 
-            <div class="grid sm:grid-cols-2 gap-4 mt-6">
-                <div class="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center">
-                        <svg class="w-5 h-5 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 10-8 0v4M5 11h14v8a2 2 0 01-2 2H7a2 2 0 01-2-2v-8z"/></svg>
-                    </div>
-                    <div>
-                        <p class="font-medium">CRM & Contacts</p>
-                        <p class="text-sm text-zinc-500">Organize people and companies with zero fuss.</p>
-                    </div>
+                    <i class="fa-solid fa-code text-indigo-600"></i>
+
+                    Software Development
+
                 </div>
-                <div class="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center">
-                        <svg class="w-5 h-5 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7h6l2 4h10M3 7v10a2 2 0 002 2h14a2 2 0 002-2V11"/></svg>
-                    </div>
-                    <div>
-                        <p class="font-medium">Sales Pipeline</p>
-                        <p class="text-sm text-zinc-500">Track deals with simple, visual stages.</p>
-                    </div>
+
+                <div class="flex items-center gap-3">
+
+                    <i class="fa-solid fa-cloud text-indigo-600"></i>
+
+                    Cloud Consulting
+
                 </div>
-                <div class="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center">
-                        <svg class="w-5 h-5 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7 20h10a2 2 0 002-2V6a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    </div>
-                    <div>
-                        <p class="font-medium">Tasks & Follow-Ups</p>
-                        <p class="text-sm text-zinc-500">Stay on top of actions with gentle reminders.</p>
-                    </div>
+
+                <div class="flex items-center gap-3">
+
+                    <i class="fa-solid fa-robot text-indigo-600"></i>
+
+                    AI & Automation
+
                 </div>
-                <div class="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-white/[0.05] flex items-center justify-center">
-                        <svg class="w-5 h-5 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3v18h18M7 15l3-3 4 4 5-7"/></svg>
-                    </div>
-                    <div>
-                        <p class="font-medium">Analytics Dashboard</p>
-                        <p class="text-sm text-zinc-500">See the essentials — no noise.</p>
-                    </div>
-                </div>
+
             </div>
 
-            <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                <a href="mailto:{{ config.COMPANY_EMAIL }}?subject=QuprCRM%20Early%20Access" class="px-6 py-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 font-semibold">Join early access</a>
-                <a href="{{ url_for('public.contact') }}" class="px-6 py-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 font-semibold">Get updates</a>
-            </div>
         </div>
-    </div>
-</section> -->
 
-<!-- QuprBilling Product Section -->
-<section id="quprbilling" class="py-20">
-    <div class="max-w-5xl mx-auto">
-        <!-- Header -->
-        <div class="mb-12">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-sm text-emerald-300 mb-6">
-                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                Now Available
+    </div>
+
+</section>
+<!-- TRUST -->
+<section class="py-20 border-y border-zinc-200 bg-zinc-50/60">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <p class="text-center text-sm uppercase tracking-[0.3em] text-zinc-500 mb-12 font-semibold">
+
+            Trusted By Businesses, Communities & Startups
+
+        </p>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+
+            <div class="h-24 rounded-3xl bg-white border border-zinc-200 flex items-center justify-center shadow-sm font-semibold text-zinc-700">
+                Arman Enterprises
             </div>
-            <h2 class="text-4xl lg:text-5xl font-bold mb-4">QuprBilling</h2>
-            <p class="text-xl text-zinc-300 leading-relaxed max-w-3xl">
-                A fast, offline-first billing software for small stores — built to work even when the internet goes down.
+
+            <div class="h-24 rounded-3xl bg-white border border-zinc-200 flex items-center justify-center shadow-sm font-semibold text-zinc-700">
+                Startup Founders
+            </div>
+
+            <div class="h-24 rounded-3xl bg-white border border-zinc-200 flex items-center justify-center shadow-sm font-semibold text-zinc-700">
+                Student Communities
+            </div>
+
+            <div class="h-24 rounded-3xl bg-white border border-zinc-200 flex items-center justify-center shadow-sm font-semibold text-zinc-700">
+                Growing Businesses
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="py-28">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="max-w-3xl mx-auto text-center mb-20" data-aos="fade-up">
+
+            <p class="text-indigo-600 font-semibold mb-4 uppercase tracking-wider">
+                Services
             </p>
-        </div>
 
-        <!-- Features Grid -->
-        <div class="grid md:grid-cols-2 gap-6 mb-12">
-            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 flex gap-4">
-                <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-1">Fast Billing</h4>
-                    <p class="text-sm text-zinc-400">Quick checkout with product search, barcodes, and instant totals</p>
-                </div>
-            </div>
-
-            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 flex gap-4">
-                <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-1">Works Offline</h4>
-                    <p class="text-sm text-zinc-400">No internet required — billing continues seamlessly during outages</p>
-                </div>
-            </div>
-
-            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 flex gap-4">
-                <div class="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-1">Cash & UPI Payments</h4>
-                    <p class="text-sm text-zinc-400">Accept cash, your own UPI, and track all payments in one place</p>
-                </div>
-            </div>
-
-            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 flex gap-4">
-                <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-1">Simple Product Setup</h4>
-                    <p class="text-sm text-zinc-400">Add products while billing, or batch import — zero complexity</p>
-                </div>
-            </div>
-
-            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 flex gap-4">
-                <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-6"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-1">Cloud Backup</h4>
-                    <p class="text-sm text-zinc-400">Your billing data syncs automatically — never lose a transaction</p>
-                </div>
-            </div>
-
-            <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 flex gap-4">
-                <div class="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                </div>
-                <div>
-                    <h4 class="font-semibold mb-1">Secure Store Login</h4>
-                    <p class="text-sm text-zinc-400">Only your team can access billing data — simple PIN or password</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Grows with Your Store -->
-        <div class="bg-gradient-to-r from-white/[0.04] to-white/[0.02] border border-white/[0.06] rounded-2xl p-8 mb-12">
-            <h3 class="text-lg font-semibold mb-6 flex items-center gap-2">
-                <span class="text-emerald-400">📈</span>
-                Grows With Your Store
-            </h3>
-            <p class="text-zinc-300 mb-6">Start simple. Upgrade only when needed.</p>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h4 class="font-semibold text-emerald-400 mb-3">Available as upgrades</h4>
-                    <ul class="space-y-3 text-zinc-300">
-                        <li class="flex items-start gap-3">
-                            <span class="text-emerald-400 mt-1">+</span>
-                            <span><strong>Inventory Management</strong> — Track stock, low-stock alerts, and reorder quantities</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="text-emerald-400 mt-1">+</span>
-                            <span><strong>Customer Management</strong> — Store customer details, purchase history, and loyalty</span>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-zinc-400 mb-3">Always included</h4>
-                    <ul class="space-y-3 text-zinc-300">
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span>Daily, weekly, monthly billing reports</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span>Expense tracking and profit analysis</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span>No forced setup or configuration</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pricing -->
-        <div class="mb-12">
-            <h3 class="text-2xl font-bold mb-2">Simple Pricing</h3>
-            <p class="text-zinc-400 mb-8">Choose what you need, upgrade anytime.</p>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Basic Plan -->
-                <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
-                    <div class="mb-6">
-                        <div class="text-3xl font-bold mb-1">₹299<span class="text-lg text-zinc-400 font-normal">/month</span></div>
-                        <p class="text-sm text-zinc-500">Perfect to start</p>
-                    </div>
-                    <ul class="space-y-3 mb-8 pb-8 border-b border-white/[0.06]">
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Fast billing</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Barcode support</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Cash & UPI payments</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Works offline</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Pro Plan -->
-                <div class="bg-gradient-to-br from-primary-500/15 to-primary-500/5 border border-primary-500/30 rounded-2xl p-8 relative">
-                    <div class="absolute top-0 right-0 px-3 py-1 bg-primary-500/30 text-primary-300 text-xs font-semibold rounded-bl-lg rounded-tr-2xl">Popular</div>
-                    <div class="mb-6">
-                        <div class="text-3xl font-bold mb-1">₹399<span class="text-lg text-zinc-400 font-normal">/month</span></div>
-                        <p class="text-sm text-zinc-500">Most stores choose this</p>
-                    </div>
-                    <ul class="space-y-3 mb-8 pb-8 border-b border-white/[0.06]">
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-primary-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Everything in ₹299</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-primary-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Inventory management</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-primary-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Sales & stock reports</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-primary-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Low-stock alerts</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Business Plan -->
-                <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
-                    <div class="mb-6">
-                        <div class="text-3xl font-bold mb-1">₹499<span class="text-lg text-zinc-400 font-normal">/month</span></div>
-                        <p class="text-sm text-zinc-500">For growing stores</p>
-                    </div>
-                    <ul class="space-y-3 mb-8 pb-8 border-b border-white/[0.06]">
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Everything in ₹399</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Client management</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Purchase history</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span class="text-sm">Loyalty programs</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <p class="text-center text-zinc-400 text-sm mt-8 italic">Start simple. Upgrade only when needed.</p>
-        </div>
-
-        <!-- CTA -->
-        <div class="text-center">
-            <p class="text-zinc-400 mb-6">Ready to streamline your store billing?</p>
-            <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                <a href="mailto:{{ config.COMPANY_EMAIL }}?subject=QuprBilling%20Early%20Access" class="px-6 py-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition-colors">Get Early Access</a>
-                <a href="{{ url_for('public.contact') }}" class="px-6 py-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 font-semibold transition-colors">Talk to Us</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Trust & Credibility -->
-<section class="py-16">
-    <div class="text-center mb-8">
-        <h2 class="text-2xl lg:text-3xl font-bold mb-3">Trusted by teams like yours</h2>
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 items-center">
-        <div class="h-16 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-center">
-            <span class="text-zinc-500 text-sm">
-                AWS Cloud Club at LPU
-            </span>
-        </div>
-        <div class="h-16 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-center">
-            <span class="text-zinc-500 text-sm">
-                Alexa Cars
-            </span>
-        </div>
-        <div class="h-16 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-center">
-            <span class="text-zinc-500 text-sm">
-                Sigma Communications
-            </span>
-        </div>
-        <div class="h-16 rounded-xl border border-white/[0.06] bg-white/[0.02] flex items-center justify-center">
-            <span class="text-zinc-500 text-sm">
-                CodeMatrix
-            </span>
-        </div>
-    </div>
-    <div class="mt-12 grid md:grid-cols-2 gap-6">
-        <div class="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
-            <h3 class="text-xl font-semibold mb-3">Why choose QuprDigital</h3>
-            <ul class="space-y-3 text-zinc-300">
-                <li class="flex items-start gap-3"><span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center">✓</span> Ship faster with a lean, outcome-first approach</li>
-                <li class="flex items-start gap-3"><span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center">✓</span> Built to scale — solid infra, modern tooling</li>
-                <li class="flex items-start gap-3"><span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center">✓</span> Transparent pricing, simple engagement</li>
-                <li class="flex items-start gap-3"><span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center">✓</span> Ongoing support you can count on</li>
-            </ul>
-        </div>
-        <div class="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
-            <h3 class="text-xl font-semibold mb-3">What clients say</h3>
-            <p class="text-zinc-300 leading-relaxed">“QuprDigital is a reliable partner. They ship on time, keep infrastructure solid, and help us focus on the business.”</p>
-            <div class="mt-4 text-sm text-zinc-500">— Founder, growth-stage startup</div>
-        </div>
-    </div>
-</section>
-
-<!-- Testimonials -->
-<section class="py-20">
-    <div class="text-center mb-16">
-        <h2 class="text-3xl lg:text-4xl font-bold mb-4">Trusted by Businesses</h2>
-        <p class="text-zinc-400 text-lg">What our clients say about us</p>
-    </div>
-    
-    <div class="grid md:grid-cols-3 gap-6">
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
-            <div class="flex gap-1 mb-4">
-                {% for i in range(5) %}
-                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                {% endfor %}
-            </div>
-            <p class="text-zinc-300 mb-6 leading-relaxed">"The hosting and support have been extremely reliable. Our website has had zero downtime since we switched."</p>
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold">R</div>
-                <div>
-                    <p class="font-medium text-white">Rohan Verma</p>
-                    <p class="text-sm text-zinc-500">Sigma Communications</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
-            <div class="flex gap-1 mb-4">
-                {% for i in range(5) %}
-                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                {% endfor %}
-            </div>
-            <p class="text-zinc-300 mb-6 leading-relaxed">"They delivered our web platform on time with great attention to detail. Highly recommended for any project."</p>
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-semibold">N</div>
-                <div>
-                    <p class="font-medium text-white">Neha Sharma</p>
-                    <p class="text-sm text-zinc-500">Rahul Associates</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
-            <div class="flex gap-1 mb-4">
-                {% for i in range(5) %}
-                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                {% endfor %}
-            </div>
-            <p class="text-zinc-300 mb-6 leading-relaxed">"From app development to hosting, they handled everything seamlessly. A true one-stop solution for startups."</p>
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-semibold">A</div>
-                <div>
-                    <p class="font-medium text-white">Arjun Mehta</p>
-                    <p class="text-sm text-zinc-500">Startup Founder</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="py-20">
-    <div class="relative bg-gradient-to-br from-primary-600/20 via-primary-500/10 to-transparent border border-primary-500/20 rounded-3xl p-12 text-center overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent"></div>
-        <div class="relative">
-            <h2 class="text-3xl lg:text-4xl font-bold mb-4">
-                Ready to build and scale your product?
+            <h2 class="text-5xl font-black tracking-tight text-zinc-900 leading-tight">
+                Engineering solutions for modern businesses.
             </h2>
-            <p class="text-zinc-400 text-lg mb-8 max-w-2xl mx-auto">
-                Partner with Qupr Digital for reliable web and app development,
-                backed by secure hosting and professional operations.
+
+        </div>
+
+        <div class="grid lg:grid-cols-4 gap-8">
+
+            <!-- CLOUD -->
+            <div class="group bg-white border border-zinc-200 rounded-[32px] p-8 hover:-translate-y-2 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-indigo-100" data-aos="fade-up">
+
+                <div class="w-16 h-16 rounded-3xl bg-indigo-50 flex items-center justify-center mb-8 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-cloud text-2xl text-indigo-600"></i>
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Cloud & DevOps
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed mb-8">
+
+                    Cloud architecture, deployments, CI/CD pipelines,
+                    backend systems, monitoring, and infrastructure consulting.
+
+                </p>
+
+                <div class="flex items-center gap-2 text-indigo-600 font-semibold">
+                    Learn More
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+            </div>
+
+            <!-- DEVELOPMENT -->
+            <div class="group bg-zinc-900 text-white rounded-[32px] p-8 hover:-translate-y-2 transition-all duration-500 shadow-2xl shadow-zinc-200" data-aos="fade-up" data-aos-delay="100">
+
+                <div class="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center mb-8 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-code text-2xl text-white"></i>
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Software Development
+                </h3>
+
+                <p class="text-zinc-300 leading-relaxed mb-8">
+
+                    Custom websites, dashboards, SaaS products,
+                    portals, APIs, and scalable software systems.
+
+                </p>
+
+                <div class="flex items-center gap-2 text-white font-semibold">
+                    Learn More
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+            </div>
+
+            <!-- AI -->
+            <div class="group bg-white border border-zinc-200 rounded-[32px] p-8 hover:-translate-y-2 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-cyan-100" data-aos="fade-up" data-aos-delay="200">
+
+                <div class="w-16 h-16 rounded-3xl bg-cyan-50 flex items-center justify-center mb-8 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-robot text-2xl text-cyan-600"></i>
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    AI & Automation
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed mb-8">
+
+                    AI integrations, workflow automation,
+                    chat systems, intelligent tooling,
+                    and operational optimization.
+
+                </p>
+
+                <div class="flex items-center gap-2 text-cyan-600 font-semibold">
+                    Learn More
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+            </div>
+
+            <!-- BUSINESS -->
+            <div class="group bg-white border border-zinc-200 rounded-[32px] p-8 hover:-translate-y-2 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-violet-100" data-aos="fade-up" data-aos-delay="300">
+
+                <div class="w-16 h-16 rounded-3xl bg-violet-50 flex items-center justify-center mb-8 group-hover:scale-110 transition">
+                    <i class="fa-solid fa-layer-group text-2xl text-violet-600"></i>
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Business Systems
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed mb-8">
+
+                    Internal dashboards, billing systems,
+                    CRM platforms, automation workflows,
+                    and operational software.
+
+                </p>
+
+                <div class="flex items-center gap-2 text-violet-600 font-semibold">
+                    Learn More
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- PROCESS -->
+<section class="py-28 bg-zinc-50 border-y border-zinc-200">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="text-center mb-20">
+
+            <p class="text-indigo-600 font-semibold uppercase tracking-wider mb-4">
+                Process
             </p>
-            <div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
-                <a href="mailto:{{ config.COMPANY_EMAIL }}?subject=Book%20a%20Call" class="px-6 py-3 rounded-lg bg-white text-zinc-900 font-semibold">Book a Call</a>
-                <a href="https://wa.me/{{ config.COMPANY_PHONE|replace('+','') }}" target="_blank" rel="noopener" class="px-6 py-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 font-semibold">WhatsApp</a>
-            </div>
+
+            <h2 class="text-5xl font-black tracking-tight text-zinc-900">
+                From idea to production.
+            </h2>
+
         </div>
+
+        <div class="grid lg:grid-cols-4 gap-8">
+
+            <div class="bg-white rounded-[32px] border border-zinc-200 p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-8 font-black text-xl">
+                    01
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Discovery
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Understanding business goals, requirements,
+                    workflows, and operational challenges.
+                </p>
+
+            </div>
+
+            <div class="bg-white rounded-[32px] border border-zinc-200 p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center mb-8 font-black text-xl">
+                    02
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Planning
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Architecture planning, UI/UX strategy,
+                    technical stack selection, and workflows.
+                </p>
+
+            </div>
+
+            <div class="bg-white rounded-[32px] border border-zinc-200 p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-violet-100 text-violet-600 flex items-center justify-center mb-8 font-black text-xl">
+                    03
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Development
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Agile software development, integrations,
+                    testing, optimization, and deployment.
+                </p>
+
+            </div>
+
+            <div class="bg-white rounded-[32px] border border-zinc-200 p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-8 font-black text-xl">
+                    04
+                </div>
+
+                <h3 class="text-2xl font-bold mb-4">
+                    Scale
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Monitoring, improvements, automation,
+                    infrastructure scaling, and support.
+                </p>
+
+            </div>
+
+        </div>
+
     </div>
+
 </section>
 
-<!-- Final CTA near Footer -->
-<section class="py-16">
-    <div class="max-w-4xl mx-auto text-center">
-        <h3 class="text-2xl font-bold mb-3">Let's make something people love</h3>
-        <p class="text-zinc-400 mb-6">Quick replies. Clear pricing. Zero fluff.</p>
-        <div class="flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
-            <a href="mailto:{{ config.COMPANY_EMAIL }}" class="px-6 py-3 rounded-lg bg-white text-zinc-900 font-semibold">Email</a>
-            <a href="https://wa.me/{{ config.COMPANY_PHONE|replace('+','') }}" target="_blank" rel="noopener" class="px-6 py-3 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 font-semibold">WhatsApp</a>
+<!-- CTA -->
+<section class="py-28">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="relative overflow-hidden rounded-[48px] bg-zinc-900 px-10 py-24 lg:px-20 text-center">
+
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 via-transparent to-cyan-500/20"></div>
+
+            <div class="relative max-w-3xl mx-auto">
+
+                <h2 class="text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight mb-8">
+
+                    Let’s build your next digital system.
+
+                </h2>
+
+                <p class="text-xl text-zinc-300 leading-relaxed mb-10">
+
+                    From business platforms and cloud systems
+                    to AI automation and software engineering —
+                    QDIT helps businesses build technology that scales.
+
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+
+                    <a href="{{ url_for('public.contact') }}"
+                       class="px-8 py-4 rounded-2xl bg-white text-zinc-900 font-semibold hover:bg-zinc-100 transition">
+
+                        Contact QDIT
+
+                    </a>
+
+                    <a href="https://wa.me/{{ config.COMPANY_PHONE|replace('+','') }}"
+                       target="_blank"
+                       class="px-8 py-4 rounded-2xl border border-white/20 text-white hover:bg-white/10 transition font-semibold">
+
+                        WhatsApp
+
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
+
     </div>
+
 </section>
 
-<!-- Footer -->
-<footer class="border-t border-white/[0.06] py-12 -mx-6 px-6 -mb-8">
-    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center">
-                <img src="{{ url_for('static', filename='img/logo/qupr.png') }}" alt="Qupr Digital" class="w-5 h-5">
-            </div>
-            <span class="font-semibold">Qupr Digital</span>
-        </div>
-        <div class="flex items-center gap-8 text-sm text-zinc-500">
-            <a href="mailto:{{ config.COMPANY_EMAIL }}" class="hover:text-white transition-colors">{{ config.COMPANY_EMAIL }}</a>
-            <!-- <span>{{ config.COMPANY_PHONE }}</span> -->
-        </div>
-        <p class="text-sm text-zinc-500">© 2020 - <span id="year"></span> Qupr Digital. All rights reserved.</p>
-    </div>
-</footer>
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
 <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+
+    AOS.init({
+        duration: 900,
+        once: true
+    });
+
 </script>
+
 {% endblock %}

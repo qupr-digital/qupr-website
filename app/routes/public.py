@@ -17,6 +17,11 @@ def about():
     """About page"""
     return render_template('public/about.html')
 
+@public_bp.route('/infrastructure')
+def infrastructure():
+    """Infrastructure page"""
+    return render_template('public/infrastructure.html')
+
 
 @public_bp.route('/free-invoice-maker')
 @public_bp.route('/invoice-maker')

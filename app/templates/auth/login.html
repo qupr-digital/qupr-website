@@ -1,49 +1,327 @@
 {% extends "base.html" %}
 
-{% block title %}Sign In - Qupr Digital{% endblock %}
+{% block title %}Sign In - QDIT{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .login-grid {
+        background-image:
+            linear-gradient(to right, rgba(99,102,241,0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(99,102,241,0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+    }
+
+    .glass-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255,255,255,0.7);
+    }
+
+</style>
+
+{% endblock %}
 
 {% block content %}
-<div class="min-h-[80vh] flex items-center justify-center -mt-8">
-    <div class="w-full max-w-md">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 shadow-2xl shadow-primary-500/25 mb-6">
-                <span class="text-white font-bold text-2xl">Q</span>
+
+<section class="relative overflow-hidden min-h-screen flex items-center justify-center login-grid py-20">
+
+    <!-- Background Orbs -->
+    <div class="absolute top-20 left-10 w-80 h-80 bg-indigo-200 rounded-full blur-3xl opacity-40"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200 rounded-full blur-3xl opacity-40"></div>
+
+    <div class="relative w-full max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+
+        <!-- LEFT SIDE -->
+        <div class="hidden lg:block">
+
+            <div class="max-w-xl">
+
+                <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-medium mb-8">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Secure Infrastructure Access
+                </div>
+
+                <h1 class="text-6xl font-black tracking-tight leading-[1.05] text-zinc-900">
+                    Welcome back to
+                    <span class="bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 bg-clip-text text-transparent">
+                        QDIT.
+                    </span>
+                </h1>
+
+                <p class="mt-8 text-xl text-zinc-600 leading-relaxed">
+                    Access dashboards, infrastructure systems,
+                    billing tools, and operational services from one secure platform.
+                </p>
+
+                <div class="mt-14 space-y-5">
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-lg text-zinc-900">
+                                Secure Authentication
+                            </h4>
+
+                            <p class="text-zinc-600 mt-1">
+                                Protected infrastructure access with encrypted sessions.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="w-12 h-12 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-lg text-zinc-900">
+                                Centralized Systems
+                            </h4>
+
+                            <p class="text-zinc-600 mt-1">
+                                Manage infrastructure, services, and business tools from one place.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-cloud"></i>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-lg text-zinc-900">
+                                Cloud Connected
+                            </h4>
+
+                            <p class="text-zinc-600 mt-1">
+                                Built for scalable operations and modern cloud infrastructure.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
-            <h1 class="text-2xl font-bold">Welcome back</h1>
-            <p class="text-zinc-500 mt-2">Sign in to your account</p>
+
         </div>
 
-        <!-- Login Form -->
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8">
-            <form method="POST" action="{{ url_for('auth.login') }}" class="space-y-6">
-                <div>
-                    <label for="email" class="block text-sm font-medium text-zinc-400 mb-2">Email address</label>
-                    <input type="email" id="email" name="email" required autofocus 
-                           class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-all"
-                           placeholder="you@example.com">
+        <!-- LOGIN CARD -->
+        <div class="relative">
+
+            <div class="glass-card rounded-[40px] p-10 lg:p-12 shadow-2xl shadow-indigo-100">
+
+                <!-- Logo -->
+                <div class="text-center mb-10">
+
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-[32px] bg-white border border-zinc-200 shadow-xl overflow-hidden mb-6">
+
+                        <img
+                            src="{{ url_for('static', filename='img/logo/qupr.png') }}"
+                            alt="QDIT Logo"
+                            class="w-14 h-14 object-contain"
+                        >
+
+                    </div>
+
+                    <h2 class="text-4xl font-black tracking-tight text-zinc-900">
+                        Sign in to QDIT
+                    </h2>
+
+                    <p class="text-zinc-500 mt-3 text-lg">
+                        Access your infrastructure dashboard
+                    </p>
+
                 </div>
 
-                <div>
-                    <label for="password" class="block text-sm font-medium text-zinc-400 mb-2">Password</label>
-                    <input type="password" id="password" name="password" required 
-                           class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-all"
-                           placeholder="••••••••">
+                <!-- FORM -->
+                <form method="POST"
+                      action="{{ url_for('auth.login') }}"
+                      class="space-y-6">
+
+                    <!-- Email -->
+                    <div>
+
+                        <label for="email"
+                               class="block text-sm font-semibold text-zinc-700 mb-3">
+                            Email Address
+                        </label>
+
+                        <div class="relative">
+
+                            <i class="fa-solid fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                                autofocus
+                                placeholder="you@example.com"
+                                class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+
+                        <div class="flex items-center justify-between mb-3">
+
+                            <label for="password"
+                                   class="text-sm font-semibold text-zinc-700">
+                                Password
+                            </label>
+
+                            <a href="#"
+                               class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                Forgot password?
+                            </a>
+
+                        </div>
+
+                        <div class="relative">
+
+                            <i class="fa-solid fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                                placeholder="••••••••"
+                                class="w-full h-16 pl-14 pr-14 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition"
+                            >
+
+                            <button type="button"
+                                    id="togglePassword"
+                                    class="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 transition">
+
+                                <i class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Remember -->
+                    <div class="flex items-center justify-between">
+
+                        <label class="flex items-center gap-3 cursor-pointer">
+
+                            <input type="checkbox"
+                                   class="w-5 h-5 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500">
+
+                            <span class="text-zinc-600 text-sm">
+                                Remember me
+                            </span>
+
+                        </label>
+
+                        <div class="flex items-center gap-2 text-emerald-600 text-sm font-medium">
+
+                            <i class="fa-solid fa-shield-check"></i>
+                            Secure Login
+
+                        </div>
+
+                    </div>
+
+                    <!-- Submit -->
+                    <button
+                        type="submit"
+                        class="w-full h-16 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold text-lg transition shadow-2xl shadow-zinc-200"
+                    >
+                        Sign In
+                    </button>
+
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-10">
+
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-zinc-200"></div>
+                    </div>
+
+                    <div class="relative flex justify-center">
+                        <span class="bg-white px-5 text-sm text-zinc-400">
+                            QDIT Infrastructure Access
+                        </span>
+                    </div>
+
                 </div>
 
-                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-0.5">
-                    Sign In
-                </button>
-            </form>
+                <div class="text-center mb-8">
+                    <p class="text-zinc-500 text-sm mb-4">
+                        New client? Register your account directly.
+                    </p>
+
+                    <a href="{{ url_for('auth.register') }}"
+                       class="inline-flex items-center justify-center gap-3 px-6 py-3 rounded-2xl border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition font-semibold">
+                        <i class="fa-solid fa-user-plus"></i>
+                        Register Now
+                    </a>
+                </div>
+
+                <!-- Back -->
+                <div class="text-center">
+
+                    <a href="{{ url_for('public.index') }}"
+                       class="inline-flex items-center gap-3 text-zinc-500 hover:text-zinc-900 transition font-medium">
+
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Back to Homepage
+
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <!-- Back Link -->
-        <div class="text-center mt-8">
-            <a href="{{ url_for('public.index') }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Back to home
-            </a>
-        </div>
     </div>
-</div>
+
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', () => {
+
+        const type = passwordInput.getAttribute('type') === 'password'
+            ? 'text'
+            : 'password';
+
+        passwordInput.setAttribute('type', type);
+
+        togglePassword.innerHTML = type === 'password'
+            ? '<i class=\"fa-solid fa-eye\"></i>'
+            : '<i class=\"fa-solid fa-eye-slash\"></i>';
+
+    });
+
+</script>
+
 {% endblock %}

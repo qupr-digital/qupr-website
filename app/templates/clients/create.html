@@ -1,71 +1,462 @@
 {% extends "base.html" %}
 
-{% block title %}Add Client - Qupr Digital{% endblock %}
+{% block title %}Add Client - QDIT{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .client-grid {
+        background-image:
+            linear-gradient(to right, rgba(99,102,241,0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(99,102,241,0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+    }
+
+    .glass-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255,255,255,0.7);
+    }
+
+</style>
+
+{% endblock %}
 
 {% block content %}
-<!-- Header -->
-<div class="mb-8">
-    <a href="{{ url_for('clients.list_clients') }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-4">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Back to Clients
-    </a>
-    <h1 class="text-3xl font-bold bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">Add Client</h1>
-</div>
 
-<!-- Form -->
-<div class="max-w-xl">
-    <form method="POST" class="space-y-6">
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-6">
-            <div>
-                <label for="company_name" class="block text-sm font-medium text-zinc-400 mb-2">Company Name <span class="text-red-400">*</span></label>
-                <input type="text" id="company_name" name="company_name" required placeholder="ABC Corporation"
-                       class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 transition-all">
-            </div>
+<section class="relative overflow-hidden min-h-screen client-grid py-10 sm:py-14">
+
+    <!-- Background -->
+    <div class="absolute top-10 left-10 w-72 h-72 bg-indigo-200 rounded-full blur-3xl opacity-40"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200 rounded-full blur-3xl opacity-40"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+
+        <!-- HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
 
             <div>
-                <label for="gstin" class="block text-sm font-medium text-zinc-400 mb-2">GSTIN</label>
-                <input type="text" id="gstin" name="gstin" maxlength="15" placeholder="27AABCT1234H1Z0"
-                       class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all font-mono">
+
+                <a href="{{ url_for('clients.list_clients') }}"
+                   class="inline-flex items-center gap-3 text-zinc-500 hover:text-zinc-900 transition font-medium mb-6">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Clients
+
+                </a>
+
+                <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-medium mb-5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    QDIT Client Management
+                </div>
+
+                <h1 class="text-5xl font-black tracking-tight text-zinc-900 mb-3">
+                    Add New Client
+                </h1>
+
+                <p class="text-lg text-zinc-600 leading-relaxed max-w-2xl">
+                    Create a new client profile for billing,
+                    invoice management, and account access.
+                </p>
+
             </div>
 
-            <div>
-                <label for="billing_address" class="block text-sm font-medium text-zinc-400 mb-2">Billing Address <span class="text-red-400">*</span></label>
-                <textarea id="billing_address" name="billing_address" rows="4" required placeholder="Street address&#10;City, State, Postal code&#10;Country"
-                          class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all resize-none"></textarea>
+            <!-- SIDE CARD -->
+            <div class="glass-card rounded-[32px] p-6 shadow-xl shadow-indigo-100 max-w-sm">
+
+                <div class="flex items-start gap-4">
+
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-circle-info text-xl"></i>
+                    </div>
+
+                    <div>
+
+                        <h3 class="font-black text-zinc-900 text-xl mb-3">
+                            Client Access
+                        </h3>
+
+                        <p class="text-zinc-600 leading-relaxed">
+                            The provided email address will automatically be used
+                            for client authentication and invoice access.
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
 
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-6">
-            <h3 class="text-sm font-medium text-zinc-300">Contact Information</h3>
-            
-            <div>
-                <label for="contact_person" class="block text-sm font-medium text-zinc-400 mb-2">Contact Person</label>
-                <input type="text" id="contact_person" name="contact_person" placeholder="John Doe"
-                       class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all">
+        <!-- FORM -->
+        <form method="POST" class="space-y-8">
+
+            <div class="grid xl:grid-cols-3 gap-8">
+
+                <!-- LEFT -->
+                <div class="xl:col-span-2 space-y-8">
+
+                    <!-- COMPANY -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-zinc-200">
+
+                        <div class="flex items-center gap-4 mb-10">
+
+                            <div class="w-16 h-16 rounded-3xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                <i class="fa-solid fa-building text-2xl"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="text-3xl font-black text-zinc-900 mb-2">
+                                    Company Information
+                                </h2>
+
+                                <p class="text-zinc-500">
+                                    Basic organization and billing details
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="space-y-7">
+
+                            <!-- Company Name -->
+                            <div>
+
+                                <label for="company_name"
+                                       class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                    Company Name
+                                    <span class="text-red-500">*</span>
+
+                                </label>
+
+                                <div class="relative">
+
+                                    <i class="fa-solid fa-building absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                    <input
+                                        type="text"
+                                        id="company_name"
+                                        name="company_name"
+                                        required
+                                        placeholder="ABC Corporation"
+                                        class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <!-- GSTIN -->
+                            <div>
+
+                                <label for="gstin"
+                                       class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                    GSTIN
+
+                                </label>
+
+                                <div class="relative">
+
+                                    <i class="fa-solid fa-receipt absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                    <input
+                                        type="text"
+                                        id="gstin"
+                                        name="gstin"
+                                        maxlength="15"
+                                        placeholder="27AABCT1234H1Z0"
+                                        class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 font-mono focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <!-- Address -->
+                            <div>
+
+                                <label for="billing_address"
+                                       class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                    Billing Address
+                                    <span class="text-red-500">*</span>
+
+                                </label>
+
+                                <textarea
+                                    id="billing_address"
+                                    name="billing_address"
+                                    rows="5"
+                                    required
+                                    placeholder="Street address&#10;City, State, Postal code&#10;Country"
+                                    class="w-full px-5 py-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 resize-none focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition"
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- CONTACT -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-zinc-200">
+
+                        <div class="flex items-center gap-4 mb-10">
+
+                            <div class="w-16 h-16 rounded-3xl bg-cyan-100 text-cyan-600 flex items-center justify-center">
+                                <i class="fa-solid fa-user-group text-2xl"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="text-3xl font-black text-zinc-900 mb-2">
+                                    Contact Information
+                                </h2>
+
+                                <p class="text-zinc-500">
+                                    Primary communication details
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-7">
+
+                            <!-- Contact Person -->
+                            <div>
+
+                                <label for="contact_person"
+                                       class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                    Contact Person
+
+                                </label>
+
+                                <div class="relative">
+
+                                    <i class="fa-solid fa-user absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                    <input
+                                        type="text"
+                                        id="contact_person"
+                                        name="contact_person"
+                                        placeholder="John Doe"
+                                        class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-500 transition"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <!-- Phone -->
+                            <div>
+
+                                <label for="contact_phone"
+                                       class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                    Contact Phone
+
+                                </label>
+
+                                <div class="relative">
+
+                                    <i class="fa-solid fa-phone absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                    <input
+                                        type="tel"
+                                        id="contact_phone"
+                                        name="contact_phone"
+                                        placeholder="+91 9876543210"
+                                        class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-500 transition"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mt-7">
+
+                            <label for="contact_email"
+                                   class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                Contact Email
+                                <span class="text-red-500">*</span>
+
+                            </label>
+
+                            <div class="relative">
+
+                                <i class="fa-solid fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                <input
+                                    type="email"
+                                    id="contact_email"
+                                    name="contact_email"
+                                    required
+                                    placeholder="contact@company.com"
+                                    class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-500 transition"
+                                >
+
+                            </div>
+
+                            <p class="text-sm text-zinc-500 mt-4 leading-relaxed">
+                                This email will automatically be used for
+                                client login access and invoice communication.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT SIDEBAR -->
+                <div class="space-y-8">
+
+                    <!-- STATUS -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-emerald-100">
+
+                        <div class="flex items-center gap-4 mb-8">
+
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                <i class="fa-solid fa-circle-check text-xl"></i>
+                            </div>
+
+                            <div>
+
+                                <h3 class="text-2xl font-black text-zinc-900">
+                                    Ready to Create
+                                </h3>
+
+                                <p class="text-zinc-500 text-sm mt-1">
+                                    Client profile setup
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="space-y-5">
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-zinc-600">
+                                    Billing Setup
+                                </span>
+
+                                <i class="fa-solid fa-check text-emerald-500"></i>
+
+                            </div>
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-zinc-600">
+                                    Invoice Access
+                                </span>
+
+                                <i class="fa-solid fa-check text-emerald-500"></i>
+
+                            </div>
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-zinc-600">
+                                    Client Authentication
+                                </span>
+
+                                <i class="fa-solid fa-check text-emerald-500"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- TIPS -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-indigo-100">
+
+                        <div class="flex items-center gap-4 mb-8">
+
+                            <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                <i class="fa-solid fa-lightbulb text-xl"></i>
+                            </div>
+
+                            <div>
+
+                                <h3 class="text-2xl font-black text-zinc-900">
+                                    Tips
+                                </h3>
+
+                                <p class="text-zinc-500 text-sm mt-1">
+                                    Better client management
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="space-y-5 text-zinc-600 leading-relaxed">
+
+                            <p>
+                                Use official billing names to avoid invoice mismatches.
+                            </p>
+
+                            <p>
+                                Add GSTIN for tax-compliant invoices and reporting.
+                            </p>
+
+                            <p>
+                                Ensure contact email access before creating the client.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div>
-                <label for="contact_email" class="block text-sm font-medium text-zinc-400 mb-2">Contact Email <span class="text-red-400">*</span></label>
-                <input type="email" id="contact_email" name="contact_email" required placeholder="contact@company.com"
-                       class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all">
-                <p class="text-xs text-zinc-500 mt-2">This email will be used to create a login account for the client</p>
+            <!-- ACTIONS -->
+            <div class="glass-card rounded-[40px] p-6 shadow-xl shadow-zinc-200">
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-end">
+
+                    <a href="{{ url_for('clients.list_clients') }}"
+                       class="px-8 h-14 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-700 font-semibold transition inline-flex items-center justify-center">
+
+                        Cancel
+
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="px-10 h-14 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold transition shadow-2xl shadow-zinc-200 inline-flex items-center justify-center"
+                    >
+
+                        <i class="fa-solid fa-plus mr-3"></i>
+                        Create Client
+
+                    </button>
+
+                </div>
+
             </div>
 
-            <div>
-                <label for="contact_phone" class="block text-sm font-medium text-zinc-400 mb-2">Contact Phone</label>
-                <input type="tel" id="contact_phone" name="contact_phone" placeholder="+91 9876543210"
-                       class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-primary-500/50 transition-all">
-            </div>
-        </div>
+        </form>
 
-        <div class="flex gap-4">
-            <button type="submit" class="flex-1 py-3.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/25 transition-all hover:shadow-primary-500/40 hover:-translate-y-0.5">
-                Create Client
-            </button>
-            <a href="{{ url_for('clients.list_clients') }}" class="px-8 py-3.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 rounded-xl font-medium transition-all">
-                Cancel
-            </a>
-        </div>
-    </form>
-</div>
+    </div>
+
+</section>
+
 {% endblock %}

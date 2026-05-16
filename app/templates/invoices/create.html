@@ -1,135 +1,592 @@
 {% extends "base.html" %}
 
-{% block title %}Create Invoice - Qupr Digital{% endblock %}
+{% block title %}Create Invoice - QDIT{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .invoice-grid {
+        background-image:
+            linear-gradient(to right, rgba(99,102,241,0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(99,102,241,0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+    }
+
+    .glass-card {
+        background: rgba(255,255,255,0.72);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(255,255,255,0.7);
+    }
+
+</style>
+
+{% endblock %}
 
 {% block content %}
-<!-- Header -->
-<div class="mb-8">
-    <a href="{{ url_for('invoices.list_invoices') }}" class="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-white transition-colors mb-4">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Back to Invoices
-    </a>
-    <h1 class="text-2xl font-bold">Create Invoice</h1>
-</div>
 
-<form method="POST" id="invoice-form" class="max-w-4xl">
-    <!-- Client Selection -->
-    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 mb-6">
-        <h2 class="text-lg font-semibold mb-6">Client</h2>
-        
-        <div>
-            <label for="client_id" class="block text-sm font-medium text-zinc-400 mb-2">Select Client *</label>
-            <select name="client_id" id="client_id" required
-                class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all appearance-none cursor-pointer">
-                <option value="">Choose a client...</option>
-                {% for client in clients %}
-                <option value="{{ client._id }}">{{ client.company_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
+<section class="relative overflow-hidden min-h-screen invoice-grid py-10 sm:py-14">
 
-    <!-- Invoice Items -->
-    <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 mb-6">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-semibold">Invoice Items</h2>
-            <button type="button" onclick="addItem()" class="inline-flex items-center gap-2 px-4 py-2 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-zinc-300 rounded-lg text-sm font-medium transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                Add Item
-            </button>
-        </div>
-        
-        <div id="items-container" class="space-y-4">
-            <div class="invoice-item" data-index="0">
-                <div class="grid grid-cols-12 gap-4 items-end">
-                    <div class="col-span-7">
-                        <label class="block text-sm font-medium text-zinc-400 mb-2">Product *</label>
-                        <select name="item_0_product_id" required onchange="updateItemDetails(0)"
-                            class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all appearance-none cursor-pointer">
-                            <option value="">Select Product</option>
-                            {% for product in products %}
-                            <option value="{{ product._id }}" 
-                                    data-rate="{{ product.rate }}" 
-                                    data-tax="{{ product.tax_rate }}">
-                                {{ product.name }} - ₹{{ product.rate }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-span-3">
-                        <label class="block text-sm font-medium text-zinc-400 mb-2">Quantity *</label>
-                        <input type="number" name="item_0_quantity" step="0.01" min="0.01" required value="1"
-                            class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all">
-                    </div>
-                    <div class="col-span-2">
-                        <button type="button" onclick="removeItem(0)" class="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 rounded-xl font-medium transition-all text-sm">
-                            Remove
-                        </button>
-                    </div>
+    <!-- Background -->
+    <div class="absolute top-10 left-10 w-72 h-72 bg-indigo-200 rounded-full blur-3xl opacity-40"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200 rounded-full blur-3xl opacity-40"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+
+        <!-- HEADER -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+
+            <div>
+
+                <a href="{{ url_for('invoices.list_invoices') }}"
+                   class="inline-flex items-center gap-3 text-zinc-500 hover:text-zinc-900 transition font-medium mb-6">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Invoices
+
+                </a>
+
+                <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-medium mb-5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    QDIT Billing System
                 </div>
+
+                <h1 class="text-5xl font-black tracking-tight text-zinc-900 mb-3">
+                    Create Invoice
+                </h1>
+
+                <p class="text-lg text-zinc-600 leading-relaxed max-w-2xl">
+                    Generate professional invoices for clients,
+                    products, services, and infrastructure billing.
+                </p>
+
             </div>
+
+            <!-- INFO CARD -->
+            <div class="glass-card rounded-[32px] p-6 shadow-xl shadow-indigo-100 max-w-sm">
+
+                <div class="flex items-start gap-4">
+
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-file-invoice-dollar text-xl"></i>
+                    </div>
+
+                    <div>
+
+                        <h3 class="font-black text-zinc-900 text-xl mb-3">
+                            Smart Billing
+                        </h3>
+
+                        <p class="text-zinc-600 leading-relaxed">
+                            Products automatically include pricing and tax configuration
+                            during invoice generation.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <input type="hidden" name="item_count" id="item_count" value="1">
+        <!-- FORM -->
+        <form method="POST" id="invoice-form" class="space-y-8">
+
+            <div class="grid xl:grid-cols-3 gap-8">
+
+                <!-- LEFT -->
+                <div class="xl:col-span-2 space-y-8">
+
+                    <!-- CLIENT -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-zinc-200">
+
+                        <div class="flex items-center gap-4 mb-10">
+
+                            <div class="w-16 h-16 rounded-3xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                <i class="fa-solid fa-building text-2xl"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="text-3xl font-black text-zinc-900 mb-2">
+                                    Client Selection
+                                </h2>
+
+                                <p class="text-zinc-500">
+                                    Choose the client receiving this invoice
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <label for="client_id"
+                                   class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                Select Client
+                                <span class="text-red-500">*</span>
+
+                            </label>
+
+                            <div class="relative">
+
+                                <i class="fa-solid fa-users absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                <select
+                                    name="client_id"
+                                    id="client_id"
+                                    required
+                                    class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 appearance-none focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition"
+                                >
+
+                                    <option value="">
+                                        Choose a client...
+                                    </option>
+
+                                    {% for client in clients %}
+
+                                    <option value="{{ client._id }}">
+                                        {{ client.company_name }}
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                                <i class="fa-solid fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ITEMS -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-zinc-200">
+
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-10">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="w-16 h-16 rounded-3xl bg-cyan-100 text-cyan-600 flex items-center justify-center">
+                                    <i class="fa-solid fa-box-open text-2xl"></i>
+                                </div>
+
+                                <div>
+
+                                    <h2 class="text-3xl font-black text-zinc-900 mb-2">
+                                        Invoice Items
+                                    </h2>
+
+                                    <p class="text-zinc-500">
+                                        Add products or services to the invoice
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                onclick="addItem()"
+                                class="h-14 px-6 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold transition inline-flex items-center justify-center shadow-xl shadow-zinc-200"
+                            >
+
+                                <i class="fa-solid fa-plus mr-3"></i>
+                                Add Item
+
+                            </button>
+
+                        </div>
+
+                        <!-- ITEMS CONTAINER -->
+                        <div id="items-container" class="space-y-6">
+
+                            <!-- ITEM -->
+                            <div class="invoice-item border border-zinc-200 rounded-[32px] p-6 bg-white/70" data-index="0">
+
+                                <div class="grid xl:grid-cols-12 gap-6 items-end">
+
+                                    <!-- PRODUCT -->
+                                    <div class="xl:col-span-7">
+
+                                        <label class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                            Product
+                                            <span class="text-red-500">*</span>
+
+                                        </label>
+
+                                        <div class="relative">
+
+                                            <i class="fa-solid fa-cube absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                            <select
+                                                name="item_0_product_id"
+                                                required
+                                                onchange="updateItemDetails(0)"
+                                                class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 appearance-none focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-500 transition"
+                                            >
+
+                                                <option value="">
+                                                    Select Product
+                                                </option>
+
+                                                {% for product in products %}
+
+                                                <option
+                                                    value="{{ product._id }}"
+                                                    data-rate="{{ product.rate }}"
+                                                    data-tax="{{ product.tax_rate }}"
+                                                >
+
+                                                    {{ product.name }} - ₹{{ product.rate }}
+
+                                                </option>
+
+                                                {% endfor %}
+
+                                            </select>
+
+                                            <i class="fa-solid fa-chevron-down absolute right-5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"></i>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- QUANTITY -->
+                                    <div class="xl:col-span-3">
+
+                                        <label class="block text-sm font-bold text-zinc-700 mb-3">
+
+                                            Quantity
+                                            <span class="text-red-500">*</span>
+
+                                        </label>
+
+                                        <div class="relative">
+
+                                            <i class="fa-solid fa-hashtag absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                                            <input
+                                                type="number"
+                                                name="item_0_quantity"
+                                                step="0.01"
+                                                min="0.01"
+                                                required
+                                                value="1"
+                                                class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-500 transition"
+                                            >
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- REMOVE -->
+                                    <div class="xl:col-span-2">
+
+                                        <button
+                                            type="button"
+                                            onclick="removeItem(0)"
+                                            class="w-full h-16 rounded-2xl bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 font-semibold transition"
+                                        >
+
+                                            Remove
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <input type="hidden" name="item_count" id="item_count" value="1">
+
+                    </div>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div class="space-y-8">
+
+                    <!-- SUMMARY -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-emerald-100">
+
+                        <div class="flex items-center gap-4 mb-8">
+
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                <i class="fa-solid fa-chart-pie text-xl"></i>
+                            </div>
+
+                            <div>
+
+                                <h3 class="text-2xl font-black text-zinc-900">
+                                    Invoice Summary
+                                </h3>
+
+                                <p class="text-zinc-500 text-sm mt-1">
+                                    Quick invoice overview
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="space-y-6">
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-zinc-600">
+                                    Invoice Items
+                                </span>
+
+                                <span id="invoice-item-count"
+                                      class="font-black text-zinc-900">
+                                    1
+                                </span>
+
+                            </div>
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-zinc-600">
+                                    Tax Handling
+                                </span>
+
+                                <span class="font-semibold text-emerald-600">
+                                    Automatic
+                                </span>
+
+                            </div>
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-zinc-600">
+                                    Invoice Status
+                                </span>
+
+                                <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">
+                                    DRAFT
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BILLING NOTES -->
+                    <div class="glass-card rounded-[40px] p-8 shadow-xl shadow-indigo-100">
+
+                        <div class="flex items-center gap-4 mb-8">
+
+                            <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                                <i class="fa-solid fa-lightbulb text-xl"></i>
+                            </div>
+
+                            <div>
+
+                                <h3 class="text-2xl font-black text-zinc-900">
+                                    Billing Notes
+                                </h3>
+
+                                <p class="text-zinc-500 text-sm mt-1">
+                                    Invoice best practices
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="space-y-5 text-zinc-600 leading-relaxed">
+
+                            <p>
+                                Ensure the correct client is selected before creating invoices.
+                            </p>
+
+                            <p>
+                                Products automatically apply configured tax rates and pricing.
+                            </p>
+
+                            <p>
+                                Draft invoices can be updated later before final issue.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="glass-card rounded-[40px] p-6 shadow-xl shadow-zinc-200">
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-end">
+
+                    <a href="{{ url_for('invoices.list_invoices') }}"
+                       class="px-8 h-14 rounded-2xl border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-700 font-semibold transition inline-flex items-center justify-center">
+
+                        Cancel
+
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="px-10 h-14 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-white font-semibold transition shadow-2xl shadow-zinc-200 inline-flex items-center justify-center"
+                    >
+
+                        <i class="fa-solid fa-check mr-3"></i>
+                        Create Invoice
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
     </div>
 
-    <!-- Actions -->
-    <div class="flex gap-4">
-        <button type="submit" class="flex-1 py-3.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl font-semibold transition-all inline-flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            Create Invoice
-        </button>
-        <a href="{{ url_for('invoices.list_invoices') }}" class="px-8 py-3.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] text-zinc-300 rounded-xl font-medium transition-all">
-            Cancel
-        </a>
-    </div>
-</form>
+</section>
 
 <script>
+
 let itemIndex = 1;
 
+function updateCounter() {
+
+    document.getElementById('invoice-item-count').innerText =
+        document.querySelectorAll('.invoice-item').length;
+
+}
+
 function addItem() {
+
     const container = document.getElementById('items-container');
+
     const itemHtml = `
-        <div class="invoice-item" data-index="${itemIndex}">
-            <div class="grid grid-cols-12 gap-4 items-end">
-                <div class="col-span-7">
-                    <label class="block text-sm font-medium text-zinc-400 mb-2">Product *</label>
-                    <select name="item_${itemIndex}_product_id" required
-                        class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all appearance-none cursor-pointer">
-                        <option value="">Select Product</option>
-                        {% for product in products %}
-                        <option value="{{ product._id }}" 
-                                data-rate="{{ product.rate }}" 
-                                data-tax="{{ product.tax_rate }}">
-                            {{ product.name }} - ₹{{ product.rate }}
-                        </option>
-                        {% endfor %}
-                    </select>
+
+        <div class="invoice-item border border-zinc-200 rounded-[32px] p-6 bg-white/70" data-index="${itemIndex}">
+
+            <div class="grid xl:grid-cols-12 gap-6 items-end">
+
+                <div class="xl:col-span-7">
+
+                    <label class="block text-sm font-bold text-zinc-700 mb-3">
+                        Product
+                    </label>
+
+                    <div class="relative">
+
+                        <i class="fa-solid fa-cube absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                        <select
+                            name="item_${itemIndex}_product_id"
+                            required
+                            class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 appearance-none focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-500 transition"
+                        >
+
+                            <option value="">
+                                Select Product
+                            </option>
+
+                            {% for product in products %}
+
+                            <option
+                                value="{{ product._id }}"
+                                data-rate="{{ product.rate }}"
+                                data-tax="{{ product.tax_rate }}"
+                            >
+
+                                {{ product.name }} - ₹{{ product.rate }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
                 </div>
-                <div class="col-span-3">
-                    <label class="block text-sm font-medium text-zinc-400 mb-2">Quantity *</label>
-                    <input type="number" name="item_${itemIndex}_quantity" step="0.01" min="0.01" required value="1"
-                        class="w-full px-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all">
+
+                <div class="xl:col-span-3">
+
+                    <label class="block text-sm font-bold text-zinc-700 mb-3">
+                        Quantity
+                    </label>
+
+                    <div class="relative">
+
+                        <i class="fa-solid fa-hashtag absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400"></i>
+
+                        <input
+                            type="number"
+                            name="item_${itemIndex}_quantity"
+                            step="0.01"
+                            min="0.01"
+                            required
+                            value="1"
+                            class="w-full h-16 pl-14 pr-5 rounded-2xl border border-zinc-200 bg-white text-zinc-900 focus:outline-none focus:ring-4 focus:ring-cyan-100 focus:border-cyan-500 transition"
+                        >
+
+                    </div>
+
                 </div>
-                <div class="col-span-2">
-                    <button type="button" onclick="removeItem(${itemIndex})" class="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 rounded-xl font-medium transition-all text-sm">
+
+                <div class="xl:col-span-2">
+
+                    <button
+                        type="button"
+                        onclick="removeItem(${itemIndex})"
+                        class="w-full h-16 rounded-2xl bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 font-semibold transition"
+                    >
+
                         Remove
+
                     </button>
+
                 </div>
+
             </div>
+
         </div>
+
     `;
+
     container.insertAdjacentHTML('beforeend', itemHtml);
+
     itemIndex++;
+
     document.getElementById('item_count').value = itemIndex;
+
+    updateCounter();
+
 }
 
 function removeItem(index) {
+
     const item = document.querySelector(`.invoice-item[data-index="${index}"]`);
+
     if (item) {
+
         item.remove();
+
+        updateCounter();
+
     }
+
 }
+
 </script>
+
 {% endblock %}

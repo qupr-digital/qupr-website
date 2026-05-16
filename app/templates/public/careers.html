@@ -1,28 +1,463 @@
 {% extends "base.html" %}
 
-{% block title %}Careers at Qupr Digital{% endblock %}
+{% block title %}Careers at QDIT{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+    .career-grid {
+        background-image:
+            linear-gradient(to right, rgba(99,102,241,0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(99,102,241,0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+    }
+
+</style>
+
+{% endblock %}
 
 {% block content %}
-<section class="py-16">
-    <div class="max-w-3xl mx-auto space-y-6">
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-8 space-y-3 text-center">
-            <p class="text-sm uppercase tracking-[0.2em] text-primary-300/80">Careers</p>
-            <h1 class="text-4xl font-bold">No open roles right now</h1>
-            <p class="text-zinc-300 leading-relaxed">We are a focused, early-stage product team. There are no positions open at the moment, and we prefer to stay honest about that.</p>
-        </div>
 
-        <div class="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6 space-y-4">
-            <h2 class="text-2xl font-semibold text-center">Who we look for</h2>
-            <div class="space-y-3 text-zinc-300">
-                <p>Builders who enjoy owning problems end-to-end and keep things simple.</p>
-                <p>Engineers and designers who care about correctness, clean APIs, and thoughtful UX.</p>
-                <p>People who take a long-term view on systems, documentation, and customer trust.</p>
+<!-- HERO -->
+<section class="relative overflow-hidden career-grid">
+
+    <div class="absolute top-20 left-20 w-72 h-72 bg-indigo-200 rounded-full blur-3xl opacity-40"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-200 rounded-full blur-3xl opacity-40"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 py-24 lg:py-32">
+
+        <div class="max-w-4xl mx-auto text-center">
+
+            <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 font-medium mb-8">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Careers at QDIT
             </div>
+
+            <h1 class="text-5xl lg:text-7xl font-black tracking-tight leading-tight text-zinc-900">
+                Build systems that
+                <span class="bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 bg-clip-text text-transparent">
+                    scale globally.
+                </span>
+            </h1>
+
+            <p class="mt-8 text-xl text-zinc-600 leading-relaxed max-w-3xl mx-auto">
+                QDIT is building modern infrastructure, scalable business systems,
+                and digital platforms for startups and businesses.
+                We're looking for ambitious people who love building.
+            </p>
+
         </div>
 
-        <div class="text-center text-zinc-400">
-            <p>There may be opportunities in the future. Please check back here for updates.</p>
-        </div>
     </div>
+
 </section>
+
+<!-- OPEN ROLES -->
+<section class="py-24">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <!-- HEADER -->
+        <div class="flex items-end justify-between flex-wrap gap-6 mb-16">
+
+            <div>
+
+                <p class="text-indigo-600 font-semibold uppercase tracking-wider mb-4">
+                    Open Positions
+                </p>
+
+                <h2 class="text-5xl font-black tracking-tight text-zinc-900">
+                    Internship opportunities.
+                </h2>
+
+            </div>
+
+            <div class="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 font-semibold">
+                <i class="fa-solid fa-circle-check"></i>
+                Applications Open
+            </div>
+
+        </div>
+
+        <!-- INFO -->
+        <div class="mb-14 rounded-[36px] border border-amber-200 bg-amber-50 p-8 lg:p-10">
+
+            <div class="flex items-start gap-5">
+
+                <div class="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-circle-info text-2xl"></i>
+                </div>
+
+                <div>
+
+                    <h3 class="text-3xl font-black text-zinc-900 mb-5">
+                        Internship Structure
+                    </h3>
+
+                    <p class="text-zinc-700 leading-relaxed text-lg">
+                        All current openings at QDIT are internship positions.
+                        Stipends are performance and client-based,
+                        depending on active projects, contributions, and business requirements.
+                    </p>
+
+                    <p class="text-zinc-600 mt-4 leading-relaxed">
+                        We’re primarily looking for ambitious builders who want real startup experience,
+                        ownership, and the opportunity to work on production systems and client projects.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ROLES -->
+        <div class="grid lg:grid-cols-2 xl:grid-cols-4 gap-8">
+
+            <!-- FRONTEND -->
+            <div class="group bg-white border border-zinc-200 rounded-[32px] p-8 hover:-translate-y-2 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-indigo-100">
+
+                <div class="w-16 h-16 rounded-3xl bg-indigo-50 flex items-center justify-center mb-8">
+                    <i class="fa-solid fa-code text-2xl text-indigo-600"></i>
+                </div>
+
+                <div class="flex items-center justify-between mb-5">
+
+                    <h3 class="text-2xl font-black text-zinc-900">
+                        Frontend Developer Intern
+                    </h3>
+
+                    <span class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold">
+                        OPEN
+                    </span>
+
+                </div>
+
+                <p class="text-zinc-600 leading-relaxed mb-8">
+                    Build modern interfaces, dashboards, landing pages,
+                    and user experiences using modern frontend technologies.
+                </p>
+
+                <div class="space-y-4 mb-10">
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        HTML / Tailwind / JavaScript
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        UI/UX understanding
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        Startup mindset
+                    </div>
+
+                </div>
+
+                <a href="mailto:contact.quprdigital@gmail.com?subject=Frontend Developer Intern Application"
+                   class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-zinc-900 text-white font-semibold hover:bg-zinc-800 transition">
+
+                    Apply Now
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+            <!-- DEVREL -->
+            <div class="group bg-zinc-900 text-white rounded-[32px] p-8 shadow-2xl shadow-zinc-200">
+
+                <div class="w-16 h-16 rounded-3xl bg-white/10 flex items-center justify-center mb-8">
+                    <i class="fa-solid fa-bullhorn text-2xl"></i>
+                </div>
+
+                <div class="flex items-center justify-between mb-5">
+
+                    <h3 class="text-2xl font-black">
+                        Developer Advocate Intern
+                    </h3>
+
+                    <span class="px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold">
+                        OPEN
+                    </span>
+
+                </div>
+
+                <p class="text-zinc-300 leading-relaxed mb-8">
+                    Represent QDIT publicly, create technical content,
+                    engage with developers, and help grow the ecosystem.
+                </p>
+
+                <div class="space-y-4 mb-10">
+
+                    <div class="flex items-center gap-3 text-zinc-200">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        Public speaking & communication
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-200">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        Technical writing
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-200">
+                        <i class="fa-solid fa-check text-emerald-400"></i>
+                        Community engagement
+                    </div>
+
+                </div>
+
+                <a href="mailto:contact.quprdigital@gmail.com?subject=Developer Advocate Intern Application"
+                   class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-white text-zinc-900 font-semibold hover:bg-zinc-100 transition">
+
+                    Apply Now
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+            <!-- CLIENT ACQUISITION -->
+            <div class="group bg-white border border-zinc-200 rounded-[32px] p-8 hover:-translate-y-2 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-cyan-100">
+
+                <div class="w-16 h-16 rounded-3xl bg-cyan-50 flex items-center justify-center mb-8">
+                    <i class="fa-solid fa-handshake text-2xl text-cyan-600"></i>
+                </div>
+
+                <div class="flex items-center justify-between mb-5">
+
+                    <h3 class="text-2xl font-black text-zinc-900">
+                        Client Acquisition Intern
+                    </h3>
+
+                    <span class="px-3 py-1 rounded-full bg-cyan-50 text-cyan-600 text-xs font-bold">
+                        OPEN
+                    </span>
+
+                </div>
+
+                <p class="text-zinc-600 leading-relaxed mb-8">
+                    Help QDIT connect with startups, businesses,
+                    and organizations looking for infrastructure and digital systems.
+                </p>
+
+                <div class="space-y-4 mb-10">
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        Communication skills
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        Outreach & networking
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        Business understanding
+                    </div>
+
+                </div>
+
+                <a href="mailto:contact.quprdigital@gmail.com?subject=Client Acquisition Intern Application"
+                   class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-zinc-900 text-white font-semibold hover:bg-zinc-800 transition">
+
+                    Apply Now
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+            <!-- AI/ML -->
+            <div class="group bg-white border border-zinc-200 rounded-[32px] p-8 hover:-translate-y-2 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-violet-100">
+
+                <div class="w-16 h-16 rounded-3xl bg-violet-50 flex items-center justify-center mb-8">
+                    <i class="fa-solid fa-brain text-2xl text-violet-600"></i>
+                </div>
+
+                <div class="flex items-center justify-between mb-5">
+
+                    <h3 class="text-2xl font-black text-zinc-900">
+                        AI/ML Intern
+                    </h3>
+
+                    <span class="px-3 py-1 rounded-full bg-violet-50 text-violet-600 text-xs font-bold">
+                        OPEN
+                    </span>
+
+                </div>
+
+                <p class="text-zinc-600 leading-relaxed mb-8">
+                    Work on AI-powered systems, automation,
+                    ML integrations, chat systems,
+                    and intelligent business tooling.
+                </p>
+
+                <div class="space-y-4 mb-10">
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        Python & APIs
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        AI/ML curiosity
+                    </div>
+
+                    <div class="flex items-center gap-3 text-zinc-700">
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        Problem-solving mindset
+                    </div>
+
+                </div>
+
+                <a href="mailto:contact.quprdigital@gmail.com?subject=AI/ML Intern Application"
+                   class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-zinc-900 text-white font-semibold hover:bg-zinc-800 transition">
+
+                    Apply Now
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- WHY JOIN -->
+<section class="py-24 bg-zinc-50 border-y border-zinc-200">
+
+    <div class="max-w-7xl mx-auto px-6">
+
+        <div class="max-w-3xl mb-16">
+
+            <p class="text-indigo-600 font-semibold uppercase tracking-wider mb-4">
+                Why Join QDIT
+            </p>
+
+            <h2 class="text-5xl font-black tracking-tight leading-tight text-zinc-900">
+                Build alongside a fast-moving startup team.
+            </h2>
+
+        </div>
+
+        <div class="grid lg:grid-cols-4 gap-6">
+
+            <div class="bg-white border border-zinc-200 rounded-3xl p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+
+                <h3 class="font-bold text-xl text-zinc-900 mb-3">
+                    Fast Execution
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Work directly on real systems and products without unnecessary layers.
+                </p>
+
+            </div>
+
+            <div class="bg-white border border-zinc-200 rounded-3xl p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+
+                <h3 class="font-bold text-xl text-zinc-900 mb-3">
+                    Real Ownership
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Take ownership of projects, systems, and growth initiatives.
+                </p>
+
+            </div>
+
+            <div class="bg-white border border-zinc-200 rounded-3xl p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-server"></i>
+                </div>
+
+                <h3 class="font-bold text-xl text-zinc-900 mb-3">
+                    Infrastructure Focus
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Build systems designed for scalability and long-term reliability.
+                </p>
+
+            </div>
+
+            <div class="bg-white border border-zinc-200 rounded-3xl p-8">
+
+                <div class="w-14 h-14 rounded-2xl bg-violet-100 text-violet-600 flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+
+                <h3 class="font-bold text-xl text-zinc-900 mb-3">
+                    Startup Growth
+                </h3>
+
+                <p class="text-zinc-600 leading-relaxed">
+                    Grow alongside an ambitious early-stage infrastructure startup.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CTA -->
+<section class="py-28">
+
+    <div class="max-w-5xl mx-auto px-6 text-center">
+
+        <div class="rounded-[48px] bg-zinc-900 overflow-hidden relative px-10 py-24">
+
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 via-transparent to-cyan-500/20"></div>
+
+            <div class="relative">
+
+                <h2 class="text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight mb-8">
+                    Interested in joining QDIT?
+                </h2>
+
+                <p class="text-xl text-zinc-300 leading-relaxed max-w-3xl mx-auto mb-10">
+                    Send your resume, portfolio, LinkedIn profile,
+                    or introduction to our team.
+                    We care more about builders than perfect resumes.
+                </p>
+
+                <a href="mailto:contact.quprdigital@gmail.com"
+                   class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-white text-zinc-900 font-semibold hover:bg-zinc-100 transition">
+
+                    contact.quprdigital@gmail.com
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
 {% endblock %}
